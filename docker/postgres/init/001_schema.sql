@@ -1,36 +1,37 @@
 CREATE TABLE IF NOT EXISTS categories (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(120) NOT NULL,
-    slug VARCHAR(150) NOT NULL UNIQUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    libelle VARCHAR(120) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
-    email VARCHAR(180) NOT NULL UNIQUE,
-    password_hash TEXT NOT NULL,
-    role VARCHAR(50) NOT NULL DEFAULT 'editor',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    username VARCHAR(80) NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+    role VARCHAR(50) NOT NULL DEFAULT 'editor'
 );
 
 CREATE TABLE IF NOT EXISTS articles (
     id SERIAL PRIMARY KEY,
-    category_id INTEGER REFERENCES categories(id) ON DELETE SET NULL,
-    author_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-    title VARCHAR(255) NOT NULL,
-    slug VARCHAR(255) NOT NULL UNIQUE,
+    id_categorie INTEGER REFERENCES categories(id) ON DELETE SET NULL,
+    titre VARCHAR(255) NOT NULL,
+    contenu TEXT NOT NULL,
+    image VARCHAR(255),
+    date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    nom_auteur VARCHAR(120) NOT NULL,
+    statut VARCHAR(20) NOT NULL DEFAULT 'brouillon',
+    vue_count INTEGER NOT NULL DEFAULT 0,
     meta_title VARCHAR(255),
-    meta_description TEXT,
-    content TEXT NOT NULL,
-    view_count INTEGER NOT NULL DEFAULT 0,
-    is_published BOOLEAN NOT NULL DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    meta_description TEXT
 );
 
-INSERT INTO categories (name, slug)
+INSERT INTO categories (libelle)
 VALUES
-    ('Politique', 'politique'),
-    ('Economie', 'economie'),
-    ('Societe', 'societe')
-ON CONFLICT (slug) DO NOTHING;
+    ('Politique'),
+    ('Economie'),
+    ('Societe')
+ON CONFLICT (libelle) DO NOTHING;
+
+INSERT INTO users (username, password, role)
+VALUES
+    ('admin', 'admin123', 'admin')
+ON CONFLICT (username) DO NOTHING;
