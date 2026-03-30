@@ -1,0 +1,9 @@
+{
+  "name": "news/site",
+  "description": "News project with Flight and PostgreSQL",
+  "type": "project",
+  "require": {
+    "php": "^8.2",
+    "flightphp/core": "^3.14"
+  }
+}

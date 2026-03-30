@@ -1,0 +1,201 @@
+<?php
+
+declare(strict_types=1);
+
+require_once __DIR__ . '/../config/database.php';
+
+final class Article
+{
+    public static function countAll(): int
+    {
+        return (int) db()->query('SELECT COUNT(*) FROM articles')->fetchColumn();
+    }
+
+    public static function countPublished(): int
+    {
+        return (int) db()->query("SELECT COUNT(*) FROM articles WHERE statut = 'publie'")->fetchColumn();
+    }
+
+    /** @return list<array<string,mixed>> */
+    public static function allWithCategory(): array
+    {
+        $sql = 'SELECT a.id, a.id_categorie, a.titre, a.contenu, a.image, a.date, a.nom_auteur, a.statut, a.meta_title, a.meta_description, c.libelle AS categorie
+                FROM articles a
+                LEFT JOIN categories c ON c.id = a.id_categorie
+                ORDER BY a.date DESC, a.id DESC';
+
+        $stmt = db()->query($sql);
+        /** @var list<array<string,mixed>> $rows */
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $rows;
+    }
+
+    /** @return array<string,mixed>|null */
+    public static function findById(int $id): ?array
+    {
+        $stmt = db()->prepare('SELECT * FROM articles WHERE id = :id LIMIT 1');
+        $stmt->execute(['id' => $id]);
+        $article = $stmt->fetch(PDO::FETCH_ASSOC);
+        return is_array($article) ? $article : null;
+    }
+
+    /** @return list<array<string,mixed>> */
+    public static function recentPublished(int $limit = 10): array
+    {
+        $sql = 'SELECT a.id, a.id_categorie, a.titre, a.contenu, a.image, a.date, a.nom_auteur, a.statut, a.vue_count, a.meta_title, a.meta_description, c.libelle AS categorie
+                FROM articles a
+                LEFT JOIN categories c ON c.id = a.id_categorie
+                WHERE a.statut = :statut
+                ORDER BY a.date DESC, a.id DESC
+                LIMIT :limite';
+
+        $stmt = db()->prepare($sql);
+        $stmt->bindValue(':statut', 'publie');
+        $stmt->bindValue(':limite', max(1, $limit), PDO::PARAM_INT);
+        $stmt->execute();
+
+        /** @var list<array<string,mixed>> $rows */
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $rows;
+    }
+
+    /** @return array<string,mixed>|null */
+    public static function findPublishedById(int $id): ?array
+    {
+        $sql = 'SELECT a.id, a.id_categorie, a.titre, a.contenu, a.image, a.date, a.nom_auteur, a.statut, a.vue_count, a.meta_title, a.meta_description, c.libelle AS categorie
+                FROM articles a
+                LEFT JOIN categories c ON c.id = a.id_categorie
+                WHERE a.id = :id AND a.statut = :statut
+                LIMIT 1';
+
+        $stmt = db()->prepare($sql);
+        $stmt->execute([
+            'id' => $id,
+            'statut' => 'publie',
+        ]);
+
+        $article = $stmt->fetch(PDO::FETCH_ASSOC);
+        return is_array($article) ? $article : null;
+    }
+
+    public static function incrementViews(int $id): void
+    {
+        $stmt = db()->prepare('UPDATE articles SET vue_count = vue_count + 1 WHERE id = :id');
+        $stmt->execute(['id' => $id]);
+    }
+
+    /** @return list<array<string,mixed>> */
+    public static function publishedByCategory(int $categoryId): array
+    {
+        $sql = 'SELECT a.id, a.id_categorie, a.titre, a.contenu, a.image, a.date, a.nom_auteur, a.statut, a.vue_count, a.meta_title, a.meta_description, c.libelle AS categorie
+                FROM articles a
+                LEFT JOIN categories c ON c.id = a.id_categorie
+                WHERE a.statut = :statut AND a.id_categorie = :id_categorie
+                ORDER BY a.date DESC, a.id DESC';
+
+        $stmt = db()->prepare($sql);
+        $stmt->execute([
+            'statut' => 'publie',
+            'id_categorie' => $categoryId,
+        ]);
+
+        /** @var list<array<string,mixed>> $rows */
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $rows;
+    }
+
+    /** @return array<string,mixed>|null */
+    public static function previousPublished(int $currentId, string $currentDate): ?array
+    {
+        $sql = 'SELECT id, titre
+                FROM articles
+                WHERE statut = :statut
+                  AND (date < :date OR (date = :date AND id < :id))
+                ORDER BY date DESC, id DESC
+                LIMIT 1';
+
+        $stmt = db()->prepare($sql);
+        $stmt->execute([
+            'statut' => 'publie',
+            'date' => $currentDate,
+            'id' => $currentId,
+        ]);
+
+        $article = $stmt->fetch(PDO::FETCH_ASSOC);
+        return is_array($article) ? $article : null;
+    }
+
+    /** @return array<string,mixed>|null */
+    public static function nextPublished(int $currentId, string $currentDate): ?array
+    {
+        $sql = 'SELECT id, titre
+                FROM articles
+                WHERE statut = :statut
+                  AND (date > :date OR (date = :date AND id > :id))
+                ORDER BY date ASC, id ASC
+                LIMIT 1';
+
+        $stmt = db()->prepare($sql);
+        $stmt->execute([
+            'statut' => 'publie',
+            'date' => $currentDate,
+            'id' => $currentId,
+        ]);
+
+        $article = $stmt->fetch(PDO::FETCH_ASSOC);
+        return is_array($article) ? $article : null;
+    }
+
+    /** @param array<string,mixed> $data */
+    public static function create(array $data): void
+    {
+        $sql = 'INSERT INTO articles (id_categorie, titre, contenu, image, nom_auteur, statut, meta_title, meta_description)
+                VALUES (:id_categorie, :titre, :contenu, :image, :nom_auteur, :statut, :meta_title, :meta_description)';
+
+        $stmt = db()->prepare($sql);
+        $stmt->execute([
+            'id_categorie' => $data['id_categorie'],
+            'titre' => $data['titre'],
+            'contenu' => $data['contenu'],
+            'image' => $data['image'],
+            'nom_auteur' => $data['nom_auteur'],
+            'statut' => $data['statut'],
+            'meta_title' => $data['meta_title'],
+            'meta_description' => $data['meta_description'],
+        ]);
+    }
+
+    /** @param array<string,mixed> $data */
+    public static function update(int $id, array $data): void
+    {
+        $sql = 'UPDATE articles
+                SET id_categorie = :id_categorie,
+                    titre = :titre,
+                    contenu = :contenu,
+                    image = :image,
+                    nom_auteur = :nom_auteur,
+                    statut = :statut,
+                    meta_title = :meta_title,
+                    meta_description = :meta_description
+                WHERE id = :id';
+
+        $stmt = db()->prepare($sql);
+        $stmt->execute([
+            'id_categorie' => $data['id_categorie'],
+            'titre' => $data['titre'],
+            'contenu' => $data['contenu'],
+            'image' => $data['image'],
+            'nom_auteur' => $data['nom_auteur'],
+            'statut' => $data['statut'],
+            'meta_title' => $data['meta_title'],
+            'meta_description' => $data['meta_description'],
+            'id' => $id,
+        ]);
+    }
+
+    public static function delete(int $id): void
+    {
+        $stmt = db()->prepare('DELETE FROM articles WHERE id = :id');
+        $stmt->execute(['id' => $id]);
+    }
+}

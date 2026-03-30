@@ -7,8 +7,8 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - ./app:/var/www/html
-    command: sh -lc "composer update --no-interaction --prefer-dist && apache2-foreground"
+      - ./:/var/www/html
+    command: sh -lc "composer install --no-interaction --prefer-dist && apache2-foreground"
     environment:
       APP_ENV: dev
       DB_HOST: db
