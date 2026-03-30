@@ -12,13 +12,13 @@ final class HealthController
             $statement = db()->query('SELECT NOW() AS current_time');
             $currentTime = $statement ? $statement->fetchColumn() : 'n/a';
 
-            Flight::json([
+            app_json([
                 'status' => 'ok',
-                'message' => 'Flight + PostgreSQL environment is running',
+                'message' => 'Application + PostgreSQL environment is running',
                 'db_time' => $currentTime,
             ]);
         } catch (Throwable $e) {
-            Flight::json([
+            app_json([
                 'status' => 'error',
                 'message' => 'Database connection failed',
                 'details' => $e->getMessage(),

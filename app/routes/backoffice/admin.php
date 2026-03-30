@@ -9,26 +9,26 @@ require_once __DIR__ . '/../../controllers/backoffice/AdminCategoryController.ph
 require_once __DIR__ . '/../../controllers/backoffice/AdminArticleController.php';
 require_once __DIR__ . '/../../services/common/ResponseService.php';
 
-Flight::route('GET /', static function (): void {
+app_add_route($routes, 'GET', '/', static function (): void {
     ResponseService::redirect('/admin');
 });
 
-Flight::route('GET /health', [HealthController::class, 'check']);
+app_add_route($routes, 'GET', '/health', [HealthController::class, 'check']);
 
-Flight::route('GET /admin/login', [AdminAuthController::class, 'loginForm']);
-Flight::route('POST /admin/login', [AdminAuthController::class, 'login']);
-Flight::route('GET /admin/logout', [AdminAuthController::class, 'logout']);
+app_add_route($routes, 'GET', '/admin/login', [AdminAuthController::class, 'loginForm']);
+app_add_route($routes, 'POST', '/admin/login', [AdminAuthController::class, 'login']);
+app_add_route($routes, 'GET', '/admin/logout', [AdminAuthController::class, 'logout']);
 
-Flight::route('GET /admin', [AdminDashboardController::class, 'index']);
+app_add_route($routes, 'GET', '/admin', [AdminDashboardController::class, 'index']);
 
-Flight::route('GET /admin/categories', [AdminCategoryController::class, 'index']);
-Flight::route('POST /admin/categories/create', [AdminCategoryController::class, 'create']);
-Flight::route('POST /admin/categories/update/@id', [AdminCategoryController::class, 'update']);
-Flight::route('POST /admin/categories/delete/@id', [AdminCategoryController::class, 'delete']);
+app_add_route($routes, 'GET', '/admin/categories', [AdminCategoryController::class, 'index']);
+app_add_route($routes, 'POST', '/admin/categories/create', [AdminCategoryController::class, 'create']);
+app_add_route($routes, 'POST', '/admin/categories/update/@id', [AdminCategoryController::class, 'update']);
+app_add_route($routes, 'POST', '/admin/categories/delete/@id', [AdminCategoryController::class, 'delete']);
 
-Flight::route('GET /admin/articles', [AdminArticleController::class, 'index']);
-Flight::route('GET /admin/articles/create', [AdminArticleController::class, 'createForm']);
-Flight::route('POST /admin/articles/create', [AdminArticleController::class, 'create']);
-Flight::route('GET /admin/articles/edit/@id', [AdminArticleController::class, 'editForm']);
-Flight::route('POST /admin/articles/edit/@id', [AdminArticleController::class, 'edit']);
-Flight::route('POST /admin/articles/delete/@id', [AdminArticleController::class, 'delete']);
+app_add_route($routes, 'GET', '/admin/articles', [AdminArticleController::class, 'index']);
+app_add_route($routes, 'GET', '/admin/articles/create', [AdminArticleController::class, 'createForm']);
+app_add_route($routes, 'POST', '/admin/articles/create', [AdminArticleController::class, 'create']);
+app_add_route($routes, 'GET', '/admin/articles/edit/@id', [AdminArticleController::class, 'editForm']);
+app_add_route($routes, 'POST', '/admin/articles/edit/@id', [AdminArticleController::class, 'edit']);
+app_add_route($routes, 'POST', '/admin/articles/delete/@id', [AdminArticleController::class, 'delete']);

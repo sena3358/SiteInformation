@@ -6,8 +6,6 @@ final class ResponseService
 {
     public static function redirect(string $path): void
     {
-        Flight::response()->status(302);
-        header('Location: ' . $path);
-        exit;
+        app_redirect($path, 302);
     }
 }

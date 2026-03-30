@@ -10,13 +10,13 @@ final class FrontArticleController
     public static function show(string $id): void
     {
         if (!ctype_digit($id)) {
-            Flight::halt(404, 'Article introuvable.');
+            app_halt(404, 'Article introuvable.');
         }
 
         $articleId = (int) $id;
         $article = Article::findPublishedById($articleId);
         if ($article === null) {
-            Flight::halt(404, 'Article introuvable.');
+            app_halt(404, 'Article introuvable.');
         }
 
         Article::incrementViews($articleId);
@@ -32,13 +32,13 @@ final class FrontArticleController
     public static function byCategory(string $id): void
     {
         if (!ctype_digit($id)) {
-            Flight::halt(404, 'Categorie introuvable.');
+            app_halt(404, 'Categorie introuvable.');
         }
 
         $categoryId = (int) $id;
         $category = Category::findById($categoryId);
         if ($category === null) {
-            Flight::halt(404, 'Categorie introuvable.');
+            app_halt(404, 'Categorie introuvable.');
         }
 
         $articles = Article::publishedByCategory($categoryId);

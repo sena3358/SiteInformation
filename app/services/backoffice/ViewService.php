@@ -21,7 +21,7 @@ final class ViewService
         require $viewFile;
         $content = (string) ob_get_clean();
 
-        Flight::response()->header('Content-Type', 'text/html; charset=UTF-8');
+        app_set_header('Content-Type', 'text/html; charset=UTF-8');
         require __DIR__ . '/../../views/backoffice/layouts/admin.php';
     }
 

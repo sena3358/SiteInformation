@@ -7,12 +7,12 @@ require_once __DIR__ . '/../../controllers/frontoffice/FrontArticleController.ph
 require_once __DIR__ . '/../../controllers/frontoffice/UserController.php';
 require_once __DIR__ . '/../../controllers/frontoffice/VisitorAuthController.php';
 
-Flight::route('GET /mvc', [HomeController::class, 'index']);
-Flight::route('GET /article/@id', [FrontArticleController::class, 'show']);
-Flight::route('GET /categorie/@id', [FrontArticleController::class, 'byCategory']);
-Flight::route('GET /users', [UserController::class, 'list']);
-Flight::route('GET /users/form', [UserController::class, 'form']);
-Flight::route('GET /login', [VisitorAuthController::class, 'loginForm']);
-Flight::route('POST /login', [VisitorAuthController::class, 'login']);
-Flight::route('GET /logout', [VisitorAuthController::class, 'logout']);
-Flight::route('GET /mon-compte', [VisitorAuthController::class, 'account']);
+app_add_route($routes, 'GET', '/mvc', [HomeController::class, 'index']);
+app_add_route($routes, 'GET', '/article/@id', [FrontArticleController::class, 'show']);
+app_add_route($routes, 'GET', '/categorie/@id', [FrontArticleController::class, 'byCategory']);
+app_add_route($routes, 'GET', '/users', [UserController::class, 'list']);
+app_add_route($routes, 'GET', '/users/form', [UserController::class, 'form']);
+app_add_route($routes, 'GET', '/login', [VisitorAuthController::class, 'loginForm']);
+app_add_route($routes, 'POST', '/login', [VisitorAuthController::class, 'login']);
+app_add_route($routes, 'GET', '/logout', [VisitorAuthController::class, 'logout']);
+app_add_route($routes, 'GET', '/mon-compte', [VisitorAuthController::class, 'account']);
