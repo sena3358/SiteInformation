@@ -32,7 +32,7 @@
                 <?php foreach ($articles as $article): ?>
                     <article>
                         <?php if (!empty($article['image'])): ?>
-                            <img class="image" src="<?= htmlspecialchars((string) $article['image'], ENT_QUOTES, 'UTF-8') ?>" alt="Illustration de l'article <?= htmlspecialchars((string) $article['titre'], ENT_QUOTES, 'UTF-8') ?>">
+                            <img class="image" src="<?= htmlspecialchars((string) $article['image'], ENT_QUOTES, 'UTF-8') ?>" alt="Illustration de l'article <?= htmlspecialchars((string) $article['titre'], ENT_QUOTES, 'UTF-8') ?>" loading="lazy">
                         <?php endif; ?>
                         <h2><a href="<?= htmlspecialchars(Article::url($article), ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars((string) $article['titre'], ENT_QUOTES, 'UTF-8') ?></a></h2>
                         <p class="meta">

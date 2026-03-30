@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://TPsiteInformation.com/sitemap.xml
+
+
+# Delay between requests (optional)
+Crawl-delay: 1
+
+# Specific disallow rules (if needed in the future)
+# Disallow: /admin/

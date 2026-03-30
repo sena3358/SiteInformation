@@ -37,6 +37,11 @@ function app_halt(int $statusCode, string $message): void
     exit;
 }
 
+function app_gone(int $statusCode = 410, string $message = 'Cette ressource n\'est plus disponible.'): void
+{
+    app_halt($statusCode, $message);
+}
+
 function slugify(string $text): string
 {
     $text = mb_strtolower($text, 'UTF-8');

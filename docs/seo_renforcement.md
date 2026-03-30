@@ -211,6 +211,167 @@ Le site refletera immediatement le changement sur toutes les pages.
 
 ---
 
+## 7. Sitemap XML et Robots.txt
+
+### Objectif
+Permettre aux moteurs de recherche de decouvrir et explorer efficacement le site.
+
+### Sitemap.xml
+
+**Fichier** : `public/sitemap.xml.php` (et route `/sitemap.xml`)
+
+Le sitemap XML est genere dynamiquement et contient :
+- **Page d'accueil** : Priorite 1.0, frequence journaliere
+- **Articles** : Priorite 0.8, frequence hebdomadaire (jusqu'a 50 000 articles)
+- **Categories** : Priorite 0.7, frequence journaliere
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>http://localhost:8080/mvc</loc>
+        <lastmod>2026-03-30</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+    ...
+</urlset>
+```
+
+**Utilisation** :
+- Le sitemap est accessible a `/sitemap.xml`
+- Peut etre reference dans `robots.txt`
+- Permet a Google de decouvrirrapidement nouveaux articles
+
+### Robots.txt
+
+**Fichier** : `public/robots.txt`
+
+Contenu :
+```
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: http://localhost:8080/sitemap.xml
+
+# Delay entre les requetes
+Crawl-delay: 1
+```
+
+**Fonction** :
+- Autorise les bots a crawler tous les chemins (`Allow: /`)
+- Reference le sitemap XML
+- Definit un delai de 1 seconde entre les requetes pour eviter une surcharge serveur
+
+---
+
+## 8. Codes HTTP Appropriés
+
+### Objectif
+Communiquer correctement avec les moteurs de recherche sur l'etat des ressources.
+
+### Codes HTTP implementes
+
+| Code | Description | Utilisation |
+|------|-------------|------------|
+| **200** | OK | Reponse par defaut pour les pages valides |
+| **301** | Moved Permanently | Redirection canonique pour URLs avec slug incorrect |
+| **302** | Found | Redirection temporaire (par defaut, ex: apres connexion) |
+| **404** | Not Found | Article/categorie introuvable ou supprime |
+| **410** | Gone | Ressource supprimee definitivement |
+
+### Implementation
+
+**Dans bootstrap.php** :
+```php
+// Code 200 : par defaut
+app_set_status(200);
+
+// Code 404 : article non trouve
+if ($article === null) {
+    app_halt(404, 'Article introuvable.');
+}
+
+// Code 301 : redirection canonique
+if ($urlSlug !== $expectedSlug) {
+    app_redirect(Article::url($article), 301);
+}
+
+// Code 410 : ressource supprimee (nouveau)
+function app_gone(int $statusCode = 410, string $message = 'Cette ressource n\'est plus disponible.'): void
+{
+    app_halt($statusCode, $message);
+}
+```
+
+**Impact SEO** :
+- 404 indique aux bots qu'une page n'existe pas (pas d'erreur)
+- 410 indique qu'une page existait mais a ete supprimee definitivement (pas de re-indexation)
+- 301 preserve l'autorite SEO lors de redirections canoniques
+
+---
+
+## 9. Eviter les Redirect Chains
+
+### Objectif
+Optimiser le crawl budget en evitant les chaines de redirections inutiles.
+
+### Implementation
+
+**Controle dans FrontArticleController::show()** :
+
+Le systeme verifie directement le slug attendu et redirige en une seule etape :
+
+```php
+// Pas de chaine de redirection : redirection directe vers l'URL canonique
+$expectedSlug = !empty($article['slug']) ? $article['slug'] : slugify((string) $article['titre']);
+if ($urlSlug !== $expectedSlug) {
+    app_redirect(Article::url($article), 301);  // Redirection directe
+}
+```
+
+**Avantages** :
+- Une redirection 301 directe = meilleure experience utilisateur
+- Preserve davantage l'autorite SEO
+- Consomme moins de ressources serveur
+
+---
+
+## 10. Lazy Loading des Images
+
+### Objectif
+Ameliorer les performances de chargement et l'experience utilisateur.
+
+### Implementation
+
+**Ajout de `loading="lazy"` aux images** :
+
+```html
+<img src="image.jpg"
+     alt="Description"
+     loading="lazy">
+```
+
+**Pages modifiees** :
+- `app/views/frontoffice/home.php` : Lazy loading sur images d'articles
+- `app/views/frontoffice/article/show.php` : Lazy loading sur image hero
+- `app/views/frontoffice/article/category.php` : Lazy loading sur images de liste
+
+**Impact** :
+- Reduction du temps de chargement initial
+- Chargement des images uniquement quand elles deviennent visibles
+- Reduction de la bande passante
+- Meilleur score Lighthouse (Core Web Vitals)
+
+### Support navigateur
+- Chrome 76+
+- Firefox 75+
+- Safari 15.1+
+- Edge 79+
+
+
+
 ## Liste des Fichiers Modifies
 
 ### Base de donnees
@@ -228,12 +389,15 @@ Le site refletera immediatement le changement sur toutes les pages.
 ### Configuration
 | Fichier | Modification |
 |---------|--------------|
-| `app/config/bootstrap.php` | + fonction `slugify()` |
+| `app/config/bootstrap.php` | + fonction `slugify()`, + fonction `app_gone()` |
+| `app/controllers/SitemapController.php` | **Nouveau** - Genere le sitemap XML |
 
-### Routes
+### Routes et Fichiers publics
 | Fichier | Modification |
 |---------|--------------|
-| `app/routes/frontoffice/web.php` | Route `/article/@slug` |
+| `app/routes/frontoffice/web.php` | Route `/article/@slug`, route `/sitemap.xml` |
+| `public/robots.txt` | **Nouveau** - Configuration pour bots |
+| `public/sitemap.xml.php` | **Nouveau** - Sitemap XML dynamique |
 
 ### Controleurs
 | Fichier | Modification |
@@ -245,9 +409,9 @@ Le site refletera immediatement le changement sur toutes les pages.
 ### Vues
 | Fichier | Modification |
 |---------|--------------|
-| `home.php` | + meta description, + h1 unique, + URLs SEO |
-| `article/show.php` | + title avec site name, + meta auto-generee, + URLs SEO |
-| `article/category.php` | + title, + meta description, + URLs SEO |
+| `home.php` | + meta description, + h1 unique, + URLs SEO, + lazy loading |
+| `article/show.php` | + title avec site name, + meta auto-generee, + URLs SEO, + lazy loading |
+| `article/category.php` | + title, + meta description, + URLs SEO, + lazy loading |
 | `visitor/login.php` | + title, + meta description, + h1 |
 | `visitor/account.php` | + title, + meta description, + styles |
 
@@ -282,5 +446,10 @@ Le site refletera immediatement le changement sur toutes les pages.
 | Meta description | Absentes | Presentes partout |
 | Alt images | Partiellement | Systematique |
 | Configuration pays | Code en dur | Base de donnees |
+| Sitemap XML | Absent | Dynamique et mise a jour auto |
+| Robots.txt | Absent | Presente et optimise |
+| Codes HTTP | Partiels | 200, 301, 302, 404, 410 |
+| Redirect chains | Non optimise | Redirection directe |
+| Performance images | Chargement synchrone | Lazy loading (Web Vitals) |
 
-Ces modifications permettent une meilleure comprehension du contenu par les moteurs de recherche et ameliorent le positionnement dans les resultats de recherche.
+Ces modifications permettent une meilleure comprehension du contenu par les moteurs de recherche, ameliorent le positionnement dans les resultats de recherche et offrent une meilleure experience utilisateur.

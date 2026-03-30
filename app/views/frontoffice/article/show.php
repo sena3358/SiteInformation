@@ -39,7 +39,7 @@
             </p>
 
             <?php if (!empty($article['image'])): ?>
-                <img class="hero" src="<?= htmlspecialchars((string) $article['image'], ENT_QUOTES, 'UTF-8') ?>" alt="Illustration de l'article <?= htmlspecialchars((string) $article['titre'], ENT_QUOTES, 'UTF-8') ?>">
+                <img class="hero" src="<?= htmlspecialchars((string) $article['image'], ENT_QUOTES, 'UTF-8') ?>" alt="Illustration de l'article <?= htmlspecialchars((string) $article['titre'], ENT_QUOTES, 'UTF-8') ?>" loading="lazy">
             <?php endif; ?>
 
             <div class="content">
