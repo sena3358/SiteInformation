@@ -41,7 +41,24 @@ final class FrontArticleController
             app_halt(404, 'Categorie introuvable.');
         }
 
-        $articles = Article::publishedByCategory($categoryId);
+        $page = filter_input(
+            INPUT_GET,
+            'page',
+            FILTER_VALIDATE_INT,
+            ['options' => ['default' => 1, 'min_range' => 1]]
+        );
+        $currentPage = is_int($page) && $page > 0 ? $page : 1;
+        $perPage = 20;
+
+        $totalArticles = Article::countPublishedByCategory($categoryId);
+        $totalPages = max(1, (int) ceil($totalArticles / $perPage));
+        if ($currentPage > $totalPages) {
+            $currentPage = $totalPages;
+        }
+
+        $offset = ($currentPage - 1) * $perPage;
+
+        $articles = Article::publishedByCategory($categoryId, $perPage, $offset);
         require __DIR__ . '/../../views/frontoffice/article/category.php';
     }
 }

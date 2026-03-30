@@ -13,8 +13,30 @@ final class AdminArticleController
     public static function index(): void
     {
         AuthService::requireAdmin();
+
+        $page = filter_input(
+            INPUT_GET,
+            'page',
+            FILTER_VALIDATE_INT,
+            ['options' => ['default' => 1, 'min_range' => 1]]
+        );
+        $currentPage = is_int($page) && $page > 0 ? $page : 1;
+        $perPage = 100;
+
+        $totalArticles = Article::countAll();
+        $totalPages = max(1, (int) ceil($totalArticles / $perPage));
+        if ($currentPage > $totalPages) {
+            $currentPage = $totalPages;
+        }
+
+        $offset = ($currentPage - 1) * $perPage;
+
         ViewService::render('BackOffice - Articles', 'admin/articles_list', [
-            'articles' => Article::allWithCategory(),
+            'articles' => Article::allWithCategory($perPage, $offset),
+            'currentPage' => $currentPage,
+            'totalPages' => $totalPages,
+            'totalArticles' => $totalArticles,
+            'perPage' => $perPage,
         ]);
     }
 

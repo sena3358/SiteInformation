@@ -19,6 +19,10 @@
     <div class="container">
         <p><a href="/mvc">Retour accueil</a></p>
         <h1>Categorie: <?= htmlspecialchars((string) $category['libelle'], ENT_QUOTES, 'UTF-8') ?></h1>
+        <p>
+            Total: <?= (int) ($totalArticles ?? 0) ?> articles |
+            Page <?= (int) ($currentPage ?? 1) ?> / <?= (int) ($totalPages ?? 1) ?>
+        </p>
 
         <?php if (count($articles) === 0): ?>
             <p>Aucun article publie dans cette categorie pour le moment.</p>
@@ -39,6 +43,18 @@
                     </article>
                 <?php endforeach; ?>
             </div>
+
+            <?php if (($totalPages ?? 1) > 1): ?>
+                <p>
+                    <?php if (($currentPage ?? 1) > 1): ?>
+                        <a href="/categorie/<?= (int) $category['id'] ?>?page=<?= (int) (($currentPage ?? 1) - 1) ?>">&laquo; Precedent</a>
+                    <?php endif; ?>
+
+                    <?php if (($currentPage ?? 1) < ($totalPages ?? 1)): ?>
+                        <a href="/categorie/<?= (int) $category['id'] ?>?page=<?= (int) (($currentPage ?? 1) + 1) ?>">Suivant &raquo;</a>
+                    <?php endif; ?>
+                </p>
+            <?php endif; ?>
         <?php endif; ?>
     </div>
 </body>

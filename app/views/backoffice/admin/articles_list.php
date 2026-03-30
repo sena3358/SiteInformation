@@ -1,5 +1,16 @@
-<?php /** @var list<array<string,mixed>> $articles */ ?>
+<?php
+/** @var list<array<string,mixed>> $articles */
+/** @var int $currentPage */
+/** @var int $totalPages */
+/** @var int $totalArticles */
+/** @var int $perPage */
+?>
 <a href="/admin/articles/create">Ajouter un article</a>
+<p>
+    Total: <?= (int) $totalArticles ?> articles |
+    Page <?= (int) $currentPage ?> / <?= (int) $totalPages ?> |
+    <?= (int) $perPage ?> par page
+</p>
 <table>
     <thead>
         <tr>
@@ -31,3 +42,15 @@
     <?php endforeach; ?>
     </tbody>
 </table>
+
+<?php if ($totalPages > 1): ?>
+<p>
+    <?php if ($currentPage > 1): ?>
+        <a href="/admin/articles?page=<?= (int) ($currentPage - 1) ?>">&laquo; Precedent</a>
+    <?php endif; ?>
+
+    <?php if ($currentPage < $totalPages): ?>
+        <a href="/admin/articles?page=<?= (int) ($currentPage + 1) ?>">Suivant &raquo;</a>
+    <?php endif; ?>
+</p>
+<?php endif; ?>

@@ -17,14 +17,18 @@ final class Article
     }
 
     /** @return list<array<string,mixed>> */
-    public static function allWithCategory(): array
+    public static function allWithCategory(int $limit = 100, int $offset = 0): array
     {
         $sql = 'SELECT a.id, a.id_categorie, a.titre, a.contenu, a.image, a.date, a.nom_auteur, a.statut, a.meta_title, a.meta_description, c.libelle AS categorie
                 FROM articles a
                 LEFT JOIN categories c ON c.id = a.id_categorie
-                ORDER BY a.date DESC, a.id DESC';
+                ORDER BY a.date DESC, a.id DESC
+                LIMIT :limite OFFSET :decalage';
 
-        $stmt = db()->query($sql);
+        $stmt = db()->prepare($sql);
+        $stmt->bindValue(':limite', max(1, $limit), PDO::PARAM_INT);
+        $stmt->bindValue(':decalage', max(0, $offset), PDO::PARAM_INT);
+        $stmt->execute();
         /** @var list<array<string,mixed>> $rows */
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $rows;
@@ -84,20 +88,37 @@ final class Article
         $stmt->execute(['id' => $id]);
     }
 
-    /** @return list<array<string,mixed>> */
-    public static function publishedByCategory(int $categoryId): array
+    public static function countPublishedByCategory(int $categoryId): int
     {
-        $sql = 'SELECT a.id, a.id_categorie, a.titre, a.contenu, a.image, a.date, a.nom_auteur, a.statut, a.vue_count, a.meta_title, a.meta_description, c.libelle AS categorie
-                FROM articles a
-                LEFT JOIN categories c ON c.id = a.id_categorie
-                WHERE a.statut = :statut AND a.id_categorie = :id_categorie
-                ORDER BY a.date DESC, a.id DESC';
+        $sql = 'SELECT COUNT(*)
+                FROM articles
+                WHERE statut = :statut AND id_categorie = :id_categorie';
 
         $stmt = db()->prepare($sql);
         $stmt->execute([
             'statut' => 'publie',
             'id_categorie' => $categoryId,
         ]);
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    /** @return list<array<string,mixed>> */
+    public static function publishedByCategory(int $categoryId, int $limit = 20, int $offset = 0): array
+    {
+        $sql = 'SELECT a.id, a.id_categorie, a.titre, a.contenu, a.image, a.date, a.nom_auteur, a.statut, a.vue_count, a.meta_title, a.meta_description, c.libelle AS categorie
+                FROM articles a
+                LEFT JOIN categories c ON c.id = a.id_categorie
+                WHERE a.statut = :statut AND a.id_categorie = :id_categorie
+                ORDER BY a.date DESC, a.id DESC
+                LIMIT :limite OFFSET :decalage';
+
+        $stmt = db()->prepare($sql);
+        $stmt->bindValue(':statut', 'publie');
+        $stmt->bindValue(':id_categorie', $categoryId, PDO::PARAM_INT);
+        $stmt->bindValue(':limite', max(1, $limit), PDO::PARAM_INT);
+        $stmt->bindValue(':decalage', max(0, $offset), PDO::PARAM_INT);
+        $stmt->execute();
 
         /** @var list<array<string,mixed>> $rows */
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);

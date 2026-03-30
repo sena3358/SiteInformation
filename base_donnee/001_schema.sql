@@ -28,10 +28,18 @@ INSERT INTO categories (libelle)
 VALUES
     ('Politique'),
     ('Economie'),
-    ('Societe')
+    ('Societe'),
+    ('International'),
+    ('Technologie'),
+    ('Culture'),
+    ('Sport')
 ON CONFLICT (libelle) DO NOTHING;
 
 INSERT INTO users (username, password, role)
 VALUES
-    ('admin', 'admin123', 'admin')
+    ('admin', 'admin123', 'admin'),
+    ('editor1', 'editor123', 'editor'),
+    ('editor2', 'editor123', 'editor'),
+    ('moderator1', 'mod123', 'moderator'),
+    ('visiteur1', 'visiteur123', 'visitor')
 ON CONFLICT (username) DO NOTHING;
