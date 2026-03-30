@@ -7,8 +7,8 @@ require_once __DIR__ . '/../../controllers/frontoffice/FrontArticleController.ph
 require_once __DIR__ . '/../../controllers/frontoffice/UserController.php';
 require_once __DIR__ . '/../../controllers/frontoffice/VisitorAuthController.php';
 
-app_add_route($routes, 'GET', '/mvc', [HomeController::class, 'index']);
-app_add_route($routes, 'GET', '/article/@id', [FrontArticleController::class, 'show']);
+app_add_route($routes, 'GET', '/', [HomeController::class, 'index']);
+app_add_route($routes, 'GET', '/article/@slug', [FrontArticleController::class, 'show']);
 app_add_route($routes, 'GET', '/categorie/@id', [FrontArticleController::class, 'byCategory']);
 app_add_route($routes, 'GET', '/users', [UserController::class, 'list']);
 app_add_route($routes, 'GET', '/users/form', [UserController::class, 'form']);

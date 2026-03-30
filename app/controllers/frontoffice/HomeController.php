@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../../models/Article.php';
 require_once __DIR__ . '/../../models/Category.php';
+require_once __DIR__ . '/../../models/Setting.php';
 require_once __DIR__ . '/../../services/frontoffice/VisitorAuthService.php';
 
 final class HomeController
 {
     public static function index(): void
     {
-        $title = 'Actualites recentes';
+        $siteName = Setting::getSiteName();
+        $siteCountry = Setting::getCountry();
+        $title = 'Actualites recentes | ' . $siteName;
         $articles = Article::recentPublished(10);
         $categories = Category::all();
         $visitorLoggedIn = VisitorAuthService::isLoggedIn();

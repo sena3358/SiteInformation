@@ -37,6 +37,27 @@ function app_halt(int $statusCode, string $message): void
     exit;
 }
 
+function slugify(string $text): string
+{
+    $text = mb_strtolower($text, 'UTF-8');
+    $replacements = [
+        'a' => ['à', 'á', 'â', 'ã', 'ä', 'å', 'æ'],
+        'c' => ['ç'],
+        'e' => ['è', 'é', 'ê', 'ë'],
+        'i' => ['ì', 'í', 'î', 'ï'],
+        'n' => ['ñ'],
+        'o' => ['ò', 'ó', 'ô', 'õ', 'ö', 'ø', 'œ'],
+        'u' => ['ù', 'ú', 'û', 'ü'],
+        'y' => ['ý', 'ÿ'],
+        'ss' => ['ß'],
+    ];
+    foreach ($replacements as $replacement => $chars) {
+        $text = str_replace($chars, $replacement, $text);
+    }
+    $text = preg_replace('/[^a-z0-9]+/', '-', $text) ?? $text;
+    return trim($text, '-');
+}
+
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }

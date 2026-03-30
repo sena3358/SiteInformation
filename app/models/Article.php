@@ -3,9 +3,18 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../config/bootstrap.php';
 
 final class Article
 {
+    /** @param array<string,mixed> $article */
+    public static function url(array $article): string
+    {
+        $id = (int) ($article['id'] ?? 0);
+        $slug = !empty($article['slug']) ? $article['slug'] : slugify((string) ($article['titre'] ?? ''));
+        return '/article/' . $id . '-' . $slug;
+    }
+
     public static function countAll(): int
     {
         return (int) db()->query('SELECT COUNT(*) FROM articles')->fetchColumn();
@@ -19,7 +28,7 @@ final class Article
     /** @return list<array<string,mixed>> */
     public static function allWithCategory(int $limit = 100, int $offset = 0): array
     {
-        $sql = 'SELECT a.id, a.id_categorie, a.titre, a.contenu, a.image, a.date, a.nom_auteur, a.statut, a.meta_title, a.meta_description, c.libelle AS categorie
+        $sql = 'SELECT a.id, a.id_categorie, a.titre, a.slug, a.contenu, a.image, a.date, a.nom_auteur, a.statut, a.meta_title, a.meta_description, c.libelle AS categorie
                 FROM articles a
                 LEFT JOIN categories c ON c.id = a.id_categorie
                 ORDER BY a.date DESC, a.id DESC
@@ -46,7 +55,7 @@ final class Article
     /** @return list<array<string,mixed>> */
     public static function recentPublished(int $limit = 10): array
     {
-        $sql = 'SELECT a.id, a.id_categorie, a.titre, a.contenu, a.image, a.date, a.nom_auteur, a.statut, a.vue_count, a.meta_title, a.meta_description, c.libelle AS categorie
+        $sql = 'SELECT a.id, a.id_categorie, a.titre, a.slug, a.contenu, a.image, a.date, a.nom_auteur, a.statut, a.vue_count, a.meta_title, a.meta_description, c.libelle AS categorie
                 FROM articles a
                 LEFT JOIN categories c ON c.id = a.id_categorie
                 WHERE a.statut = :statut
@@ -66,7 +75,7 @@ final class Article
     /** @return array<string,mixed>|null */
     public static function findPublishedById(int $id): ?array
     {
-        $sql = 'SELECT a.id, a.id_categorie, a.titre, a.contenu, a.image, a.date, a.nom_auteur, a.statut, a.vue_count, a.meta_title, a.meta_description, c.libelle AS categorie
+        $sql = 'SELECT a.id, a.id_categorie, a.titre, a.slug, a.contenu, a.image, a.date, a.nom_auteur, a.statut, a.vue_count, a.meta_title, a.meta_description, c.libelle AS categorie
                 FROM articles a
                 LEFT JOIN categories c ON c.id = a.id_categorie
                 WHERE a.id = :id AND a.statut = :statut
@@ -106,7 +115,7 @@ final class Article
     /** @return list<array<string,mixed>> */
     public static function publishedByCategory(int $categoryId, int $limit = 20, int $offset = 0): array
     {
-        $sql = 'SELECT a.id, a.id_categorie, a.titre, a.contenu, a.image, a.date, a.nom_auteur, a.statut, a.vue_count, a.meta_title, a.meta_description, c.libelle AS categorie
+        $sql = 'SELECT a.id, a.id_categorie, a.titre, a.slug, a.contenu, a.image, a.date, a.nom_auteur, a.statut, a.vue_count, a.meta_title, a.meta_description, c.libelle AS categorie
                 FROM articles a
                 LEFT JOIN categories c ON c.id = a.id_categorie
                 WHERE a.statut = :statut AND a.id_categorie = :id_categorie
@@ -128,7 +137,7 @@ final class Article
     /** @return array<string,mixed>|null */
     public static function previousPublished(int $currentId, string $currentDate): ?array
     {
-        $sql = 'SELECT id, titre
+        $sql = 'SELECT id, titre, slug
                 FROM articles
                 WHERE statut = :statut
                   AND (date < :date OR (date = :date AND id < :id))
@@ -149,7 +158,7 @@ final class Article
     /** @return array<string,mixed>|null */
     public static function nextPublished(int $currentId, string $currentDate): ?array
     {
-        $sql = 'SELECT id, titre
+        $sql = 'SELECT id, titre, slug
                 FROM articles
                 WHERE statut = :statut
                   AND (date > :date OR (date = :date AND id > :id))
@@ -170,13 +179,15 @@ final class Article
     /** @param array<string,mixed> $data */
     public static function create(array $data): void
     {
-        $sql = 'INSERT INTO articles (id_categorie, titre, contenu, image, nom_auteur, statut, meta_title, meta_description)
-                VALUES (:id_categorie, :titre, :contenu, :image, :nom_auteur, :statut, :meta_title, :meta_description)';
+        $slug = !empty($data['slug']) ? $data['slug'] : slugify((string) $data['titre']);
+        $sql = 'INSERT INTO articles (id_categorie, titre, slug, contenu, image, nom_auteur, statut, meta_title, meta_description)
+                VALUES (:id_categorie, :titre, :slug, :contenu, :image, :nom_auteur, :statut, :meta_title, :meta_description)';
 
         $stmt = db()->prepare($sql);
         $stmt->execute([
             'id_categorie' => $data['id_categorie'],
             'titre' => $data['titre'],
+            'slug' => $slug,
             'contenu' => $data['contenu'],
             'image' => $data['image'],
             'nom_auteur' => $data['nom_auteur'],
@@ -189,9 +200,11 @@ final class Article
     /** @param array<string,mixed> $data */
     public static function update(int $id, array $data): void
     {
+        $slug = !empty($data['slug']) ? $data['slug'] : slugify((string) $data['titre']);
         $sql = 'UPDATE articles
                 SET id_categorie = :id_categorie,
                     titre = :titre,
+                    slug = :slug,
                     contenu = :contenu,
                     image = :image,
                     nom_auteur = :nom_auteur,
@@ -204,6 +217,7 @@ final class Article
         $stmt->execute([
             'id_categorie' => $data['id_categorie'],
             'titre' => $data['titre'],
+            'slug' => $slug,
             'contenu' => $data['contenu'],
             'image' => $data['image'],
             'nom_auteur' => $data['nom_auteur'],

@@ -3,8 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars((string) (($article['meta_title'] ?? '') !== '' ? $article['meta_title'] : $article['titre']), ENT_QUOTES, 'UTF-8') ?></title>
-    <meta name="description" content="<?= htmlspecialchars((string) ($article['meta_description'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
+    <?php
+    $pageTitle = (($article['meta_title'] ?? '') !== '' ? $article['meta_title'] : $article['titre']);
+    $metaDesc = ($article['meta_description'] ?? '');
+    if ($metaDesc === '') {
+        $metaDesc = mb_substr(strip_tags((string) ($article['contenu'] ?? '')), 0, 160) . '...';
+    }
+    ?>
+    <title><?= htmlspecialchars((string) $pageTitle, ENT_QUOTES, 'UTF-8') ?> | <?= htmlspecialchars($siteName ?? 'Actualites', ENT_QUOTES, 'UTF-8') ?></title>
+    <meta name="description" content="<?= htmlspecialchars((string) $metaDesc, ENT_QUOTES, 'UTF-8') ?>">
     <style>
         body { font-family: Georgia, "Times New Roman", serif; background: #f8f7f4; color: #1f1f1f; margin: 0; }
         .container { max-width: 920px; margin: 0 auto; padding: 28px 16px 42px; }
@@ -42,12 +49,12 @@
             <nav class="nav">
                 <div>
                     <?php if (is_array($previousArticle)): ?>
-                        <a href="/article/<?= (int) $previousArticle['id'] ?>">Article precedent: <?= htmlspecialchars((string) $previousArticle['titre'], ENT_QUOTES, 'UTF-8') ?></a>
+                        <a href="<?= htmlspecialchars(Article::url($previousArticle), ENT_QUOTES, 'UTF-8') ?>">Article precedent: <?= htmlspecialchars((string) $previousArticle['titre'], ENT_QUOTES, 'UTF-8') ?></a>
                     <?php endif; ?>
                 </div>
                 <div>
                     <?php if (is_array($nextArticle)): ?>
-                        <a href="/article/<?= (int) $nextArticle['id'] ?>">Article suivant: <?= htmlspecialchars((string) $nextArticle['titre'], ENT_QUOTES, 'UTF-8') ?></a>
+                        <a href="<?= htmlspecialchars(Article::url($nextArticle), ENT_QUOTES, 'UTF-8') ?>">Article suivant: <?= htmlspecialchars((string) $nextArticle['titre'], ENT_QUOTES, 'UTF-8') ?></a>
                     <?php endif; ?>
                 </div>
             </nav>

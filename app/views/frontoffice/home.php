@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($title ?? 'Accueil', ENT_QUOTES, 'UTF-8') ?></title>
+    <meta name="description" content="Suivez les dernieres actualites sur la situation en <?= htmlspecialchars($siteCountry ?? 'Iran', ENT_QUOTES, 'UTF-8') ?>. Articles, analyses et informations.">
     <style>
         body { font-family: Georgia, "Times New Roman", serif; background: #f8f7f4; color: #1f1f1f; margin: 0; }
         .container { max-width: 980px; margin: 0 auto; padding: 28px 16px 42px; }
@@ -23,7 +24,7 @@
 <body>
     <div class="container">
         <header>
-            <h1><?= htmlspecialchars((string) ($title ?? 'Actualites recentes'), ENT_QUOTES, 'UTF-8') ?></h1>
+            <h1>Actualites - <?= htmlspecialchars($siteCountry ?? 'Iran', ENT_QUOTES, 'UTF-8') ?></h1>
             <?php if (($visitorLoggedIn ?? false) === true): ?>
                 <p>Connecte en tant que <strong><?= htmlspecialchars((string) ($visitorName ?? ''), ENT_QUOTES, 'UTF-8') ?></strong></p>
             <?php else: ?>
@@ -59,7 +60,7 @@
                             <img class="image" src="<?= htmlspecialchars((string) $article['image'], ENT_QUOTES, 'UTF-8') ?>" alt="Illustration de l'article <?= htmlspecialchars((string) $article['titre'], ENT_QUOTES, 'UTF-8') ?>">
                         <?php endif; ?>
                         <h3>
-                            <a href="/article/<?= (int) $article['id'] ?>">
+                            <a href="<?= htmlspecialchars(Article::url($article), ENT_QUOTES, 'UTF-8') ?>">
                                 <?= htmlspecialchars((string) $article['titre'], ENT_QUOTES, 'UTF-8') ?>
                             </a>
                         </h3>
