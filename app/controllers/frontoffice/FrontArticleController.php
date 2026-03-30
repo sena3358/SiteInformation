@@ -47,17 +47,30 @@ final class FrontArticleController
         require __DIR__ . '/../../views/frontoffice/article/show.php';
     }
 
-    public static function byCategory(string $id): void
+    public static function byCategory(string $categoryParam): void
     {
-        if (!ctype_digit($id)) {
-            app_halt(404, 'Categorie introuvable.');
+        $decodedParam = rawurldecode($categoryParam);
+
+        if (ctype_digit($decodedParam)) {
+            $legacyCategory = Category::findById((int) $decodedParam);
+            if ($legacyCategory === null) {
+                app_halt(404, 'Categorie introuvable.');
+            }
+
+            app_redirect(Category::url($legacyCategory), 301);
         }
 
-        $categoryId = (int) $id;
-        $category = Category::findById($categoryId);
+        $category = Category::findBySlug($decodedParam);
         if ($category === null) {
             app_halt(404, 'Categorie introuvable.');
         }
+
+        $expectedSlug = slugify((string) $category['libelle']);
+        if (slugify($decodedParam) !== $expectedSlug) {
+            app_redirect(Category::url($category), 301);
+        }
+
+        $categoryId = (int) $category['id'];
 
         $page = filter_input(
             INPUT_GET,

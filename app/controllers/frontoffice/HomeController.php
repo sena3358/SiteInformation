@@ -15,7 +15,7 @@ final class HomeController
         $siteCountry = Setting::getCountry();
         $title = 'Actualites recentes | ' . $siteName;
         $articles = Article::recentPublished(10);
-        $categories = Category::all();
+        $categoryHighlights = Category::allWithPublishedStats();
         $visitorLoggedIn = VisitorAuthService::isLoggedIn();
         $visitorName = VisitorAuthService::currentName();
         require __DIR__ . '/../../views/frontoffice/home.php';

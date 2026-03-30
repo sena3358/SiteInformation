@@ -2,7 +2,8 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../config/bootstrap.php';
+require_once __DIR__ . '/../config/database.php';
 
 final class SitemapController
 {
@@ -22,7 +23,7 @@ final class SitemapController
         try {
             // Page d'accueil
             echo "    <url>\n";
-            echo "        <loc>" . htmlspecialchars($baseUrl . '/mvc', ENT_QUOTES, 'UTF-8') . "</loc>\n";
+            echo "        <loc>" . htmlspecialchars($baseUrl . '/', ENT_QUOTES, 'UTF-8') . "</loc>\n";
             echo "        <lastmod>$lastmod</lastmod>\n";
             echo "        <changefreq>daily</changefreq>\n";
             echo "        <priority>1.0</priority>\n";
@@ -64,7 +65,7 @@ final class SitemapController
         } catch (Exception $e) {
             // URL par défaut en cas d'erreur
             echo "    <url>\n";
-            echo "        <loc>" . htmlspecialchars($baseUrl . '/mvc', ENT_QUOTES, 'UTF-8') . "</loc>\n";
+            echo "        <loc>" . htmlspecialchars($baseUrl . '/', ENT_QUOTES, 'UTF-8') . "</loc>\n";
             echo "        <lastmod>$lastmod</lastmod>\n";
             echo "    </url>\n";
         }

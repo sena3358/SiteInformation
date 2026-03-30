@@ -1,37 +1,61 @@
 <?php /** @var list<array{id:int,libelle:string}> $categories */ ?>
-<section style="margin-bottom:28px;">
-    <h2>Nouvelle categorie</h2>
-    <form method="post" action="/admin/categories/create" style="max-width:420px;">
-        <label for="libelle">Libelle</label>
-        <input id="libelle" name="libelle" maxlength="120" required>
-        <button type="submit">Ajouter</button>
-    </form>
-</section>
+<?php
+$categoryImages = [
+    '/assets/images/618748.jpg',
+    '/assets/images/wallpaperflare.com_wallpaper%20(9).jpg',
+];
+?>
 
-<section>
-    <h2>Liste des categories</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($categories as $category): ?>
-            <tr>
-                <td><?= (int) $category['id'] ?></td>
-                <td>
-                    <form method="post" action="/admin/categories/update/<?= (int) $category['id'] ?>" class="inline" style="display:flex;gap:8px;align-items:center;">
-                        <input style="margin:0;min-width:220px;" name="libelle" value="<?= ViewService::e((string) $category['libelle']) ?>" required>
-                        <button type="submit">Modifier</button>
-                    </form>
-                    <form method="post" action="/admin/categories/delete/<?= (int) $category['id'] ?>" class="inline" onsubmit="return confirm('Supprimer cette categorie ?')">
-                        <button class="danger" type="submit">Supprimer</button>
-                    </form>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
+<section class="bo-stack">
+    <article class="bo-card">
+        <h2 class="bo-section-title">Nouvelle categorie</h2>
+        <p class="bo-muted">Creez des categories claires pour structurer les publications.</p>
+        <form class="bo-form-grid" method="post" action="/admin/categories/create">
+            <div class="bo-field">
+                <label for="libelle">Libelle</label>
+                <input class="bo-input" id="libelle" name="libelle" maxlength="120" required>
+            </div>
+            <div class="bo-actions">
+                <button class="bo-btn" type="submit">Ajouter</button>
+            </div>
+        </form>
+    </article>
+
+    <article class="bo-stack">
+        <h2 class="bo-section-title">Liste des categories</h2>
+        <div class="bo-table-wrap">
+            <table class="bo-table">
+                <thead>
+                    <tr>
+                        <th>Apercu</th>
+                        <th>ID</th>
+                        <th>Libelle</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($categories as $category): ?>
+                    <?php $previewImage = $categoryImages[((int) $category['id']) % count($categoryImages)]; ?>
+                    <tr>
+                        <td>
+                            <img class="bo-thumb" src="<?= ViewService::e($previewImage) ?>" alt="Apercu categorie <?= (int) $category['id'] ?>" loading="lazy">
+                        </td>
+                        <td><?= (int) $category['id'] ?></td>
+                        <td>
+                            <form class="bo-actions" method="post" action="/admin/categories/update/<?= (int) $category['id'] ?>">
+                                <input class="bo-input" style="min-width:220px;" name="libelle" value="<?= ViewService::e((string) $category['libelle']) ?>" required>
+                                <button class="bo-btn-ghost" type="submit">Modifier</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="post" action="/admin/categories/delete/<?= (int) $category['id'] ?>" onsubmit="return confirm('Supprimer cette categorie ?')">
+                                <button class="bo-btn-danger" type="submit">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </article>
 </section>

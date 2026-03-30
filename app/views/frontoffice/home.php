@@ -5,32 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($title ?? 'Accueil', ENT_QUOTES, 'UTF-8') ?></title>
     <meta name="description" content="Suivez les dernieres actualites sur la situation en <?= htmlspecialchars($siteCountry ?? 'Iran', ENT_QUOTES, 'UTF-8') ?>. Articles, analyses et informations.">
-    <style>
-        body { font-family: Georgia, "Times New Roman", serif; background: #f8f7f4; color: #1f1f1f; margin: 0; }
-        .container { max-width: 980px; margin: 0 auto; padding: 28px 16px 42px; }
-        header { border-bottom: 2px solid #1f1f1f; margin-bottom: 20px; padding-bottom: 10px; }
-        h1 { margin: 0; font-size: 2rem; }
-        .top-links { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 12px; }
-        a { color: #0a4a78; text-decoration: none; }
-        a:hover { text-decoration: underline; }
-        .grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
-        article { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 14px; }
-        .meta { color: #555; font-size: 0.92rem; margin-bottom: 8px; }
-        .image { max-width: 100%; border-radius: 6px; margin-bottom: 10px; }
-        .categories { margin: 20px 0; padding: 12px; background: #fff; border: 1px solid #ddd; border-radius: 8px; }
-        .categories ul { margin: 0; padding-left: 20px; }
-    </style>
+    <link rel="stylesheet" href="/assets/css/frontoffice.css">
 </head>
 <body>
-    <div class="container">
+    <div class="fo-shell">
+        <div class="fo-layout">
+            <?php $activeNav = 'home'; require __DIR__ . '/partials/sidebar.php'; ?>
+
+            <main class="fo-main">
         <header>
-            <h1>Actualites - <?= htmlspecialchars($siteCountry ?? 'Iran', ENT_QUOTES, 'UTF-8') ?></h1>
-            <?php if (($visitorLoggedIn ?? false) === true): ?>
-                <p>Connecte en tant que <strong><?= htmlspecialchars((string) ($visitorName ?? ''), ENT_QUOTES, 'UTF-8') ?></strong></p>
-            <?php else: ?>
-                <p>Consultez les derniers articles publies.</p>
-            <?php endif; ?>
-            <nav class="top-links">
+            <div class="fo-topline">
+                <span class="fo-pill">Edition speciale: couverture terrain</span>
+                <?php if (($visitorLoggedIn ?? false) === true): ?>
+                    <span class="fo-pill">Connecte: <?= htmlspecialchars((string) ($visitorName ?? ''), ENT_QUOTES, 'UTF-8') ?></span>
+                <?php endif; ?>
+            </div>
+
+            <div class="fo-hero">
+                <div class="fo-hero-media" style="background-image:url('/assets/images/618748.jpg');"></div>
+                <div class="fo-hero-text">
+                    <h1>Actualites - <?= htmlspecialchars($siteCountry ?? 'Iran', ENT_QUOTES, 'UTF-8') ?></h1>
+                    <?php if (($visitorLoggedIn ?? false) === true): ?>
+                        <p>Suivi personnalise des derniers developpements pour votre veille.</p>
+                    <?php else: ?>
+                        <p>Consultez les derniers articles publies, analyses et decryptages verifiees.</p>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <nav class="fo-nav" aria-label="Navigation principale">
                 <a href="/login">Connexion visiteur</a>
                 <a href="/mon-compte">Mon compte</a>
                 <a href="/logout">Deconnexion</a>
@@ -38,44 +41,64 @@
             </nav>
         </header>
 
-        <section class="categories">
-            <h2>Categories</h2>
-            <ul>
-                <?php foreach (($categories ?? []) as $category): ?>
-                    <li>
-                        <a href="/categorie/<?= (int) $category['id'] ?>">
-                            <?= htmlspecialchars((string) $category['libelle'], ENT_QUOTES, 'UTF-8') ?>
-                        </a>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        </section>
+        <div class="fo-grid">
+            <aside class="fo-card">
+                <h2>Categories a suivre</h2>
+                <ul class="fo-category-briefs">
+                    <?php foreach (($categoryHighlights ?? []) as $category): ?>
+                        <li>
+                            <article class="fo-category-brief">
+                                <h3>
+                                    <a href="<?= htmlspecialchars(Category::url($category), ENT_QUOTES, 'UTF-8') ?>">
+                                        <?= htmlspecialchars((string) $category['libelle'], ENT_QUOTES, 'UTF-8') ?>
+                                    </a>
+                                </h3>
+                                <p>
+                                    <?= (int) ($category['published_count'] ?? 0) ?> article(s) publie(s)
+                                    <?php if (!empty($category['last_published_at'])): ?>
+                                        - derniere publication: <?= htmlspecialchars((string) $category['last_published_at'], ENT_QUOTES, 'UTF-8') ?>
+                                    <?php endif; ?>
+                                </p>
+                            </article>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </aside>
 
-        <section>
-            <h2>Articles recents</h2>
-            <div class="grid">
-                <?php foreach (($articles ?? []) as $article): ?>
-                    <article>
-                        <?php if (!empty($article['image'])): ?>
-                            <img class="image" src="<?= htmlspecialchars((string) $article['image'], ENT_QUOTES, 'UTF-8') ?>" alt="Illustration de l'article <?= htmlspecialchars((string) $article['titre'], ENT_QUOTES, 'UTF-8') ?>" loading="lazy">
-                        <?php endif; ?>
-                        <h3>
-                            <a href="<?= htmlspecialchars(Article::url($article), ENT_QUOTES, 'UTF-8') ?>">
-                                <?= htmlspecialchars((string) $article['titre'], ENT_QUOTES, 'UTF-8') ?>
-                            </a>
-                        </h3>
-                        <p class="meta">
-                            <?= htmlspecialchars((string) ($article['date'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
-                            - par <?= htmlspecialchars((string) ($article['nom_auteur'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
-                            <?php if (!empty($article['categorie'])): ?>
-                                - <a href="/categorie/<?= (int) ($article['id_categorie'] ?? 0) ?>"><?= htmlspecialchars((string) $article['categorie'], ENT_QUOTES, 'UTF-8') ?></a>
-                            <?php endif; ?>
-                        </p>
-                        <p><?= nl2br(htmlspecialchars(mb_substr((string) ($article['contenu'] ?? ''), 0, 220), ENT_QUOTES, 'UTF-8')) ?>...</p>
-                    </article>
-                <?php endforeach; ?>
-            </div>
-        </section>
+            <section class="fo-card">
+                <h2 class="fo-list-title">Articles recents</h2>
+                <div class="fo-article-grid">
+                    <?php foreach (($articles ?? []) as $article): ?>
+                        <article class="fo-article">
+                            <img
+                                class="fo-article-image"
+                                src="<?= htmlspecialchars(!empty($article['image']) ? (string) $article['image'] : '/assets/images/wallpaperflare.com_wallpaper%20(9).jpg', ENT_QUOTES, 'UTF-8') ?>"
+                                alt="Illustration de l'article <?= htmlspecialchars((string) $article['titre'], ENT_QUOTES, 'UTF-8') ?>"
+                                loading="lazy"
+                            >
+
+                            <div class="fo-article-body">
+                                <h3>
+                                    <a href="<?= htmlspecialchars(Article::url($article), ENT_QUOTES, 'UTF-8') ?>">
+                                        <?= htmlspecialchars((string) $article['titre'], ENT_QUOTES, 'UTF-8') ?>
+                                    </a>
+                                </h3>
+                                <p class="fo-meta">
+                                    <?= htmlspecialchars((string) ($article['date'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
+                                    - par <?= htmlspecialchars((string) ($article['nom_auteur'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
+                                    <?php if (!empty($article['categorie'])): ?>
+                                        - <a href="<?= htmlspecialchars(Category::url(['id' => (int) ($article['id_categorie'] ?? 0), 'libelle' => (string) $article['categorie']]), ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars((string) $article['categorie'], ENT_QUOTES, 'UTF-8') ?></a>
+                                    <?php endif; ?>
+                                </p>
+                                <p class="fo-summary"><?= nl2br(htmlspecialchars(mb_substr((string) ($article['contenu'] ?? ''), 0, 220), ENT_QUOTES, 'UTF-8')) ?>...</p>
+                            </div>
+                        </article>
+                    <?php endforeach; ?>
+                </div>
+            </section>
+        </div>
+            </main>
+        </div>
     </div>
 </body>
 </html>
