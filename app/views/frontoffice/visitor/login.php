@@ -20,7 +20,7 @@
                 <p class="fo-flash"><?= htmlspecialchars((string) $flash['message'], ENT_QUOTES, 'UTF-8') ?></p>
             <?php endif; ?>
 
-            <form class="fo-form" method="post" action="/login">
+            <form class="fo-form" method="post" action="<?= htmlspecialchars(UrlHelper::login(), ENT_QUOTES, 'UTF-8') ?>">
                 <label for="username">Nom utilisateur</label>
                 <input id="username" name="username" required>
 
@@ -30,7 +30,7 @@
                 <button type="submit">Se connecter</button>
             </form>
 
-            <p><a href="/home">Retour accueil</a></p>
+            <p><a href="<?= htmlspecialchars(UrlHelper::home(), ENT_QUOTES, 'UTF-8') ?>">Retour accueil</a></p>
         </section>
             </main>
         </div>

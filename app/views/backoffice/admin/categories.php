@@ -10,7 +10,7 @@ $categoryImages = [
     <article class="bo-card">
         <h2 class="bo-section-title">Nouvelle categorie</h2>
         <p class="bo-muted">Creez des categories claires pour structurer les publications.</p>
-        <form class="bo-form-grid" method="post" action="/admin/categories/create">
+        <form class="bo-form-grid" method="post" action="<?= htmlspecialchars('/admin/categories/create', ENT_QUOTES, 'UTF-8') ?>">
             <div class="bo-field">
                 <label for="libelle">Libelle</label>
                 <input class="bo-input" id="libelle" name="libelle" maxlength="120" required>

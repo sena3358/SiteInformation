@@ -9,7 +9,7 @@ $fallbackImage = '/assets/images/wallpaperflare.com_wallpaper%20(9).jpg';
 ?>
 <section class="bo-stack">
     <div class="bo-actions">
-        <a class="bo-btn" href="/admin/articles/create">Ajouter un article</a>
+        <a class="bo-btn" href="<?= htmlspecialchars(UrlHelper::adminArticlesCreate(), ENT_QUOTES, 'UTF-8') ?>">Ajouter un article</a>
         <p class="bo-muted">
             Total: <?= (int) $totalArticles ?> articles | Page <?= (int) $currentPage ?> / <?= (int) $totalPages ?> | <?= (int) $perPage ?> par page
         </p>
@@ -52,7 +52,7 @@ $fallbackImage = '/assets/images/wallpaperflare.com_wallpaper%20(9).jpg';
                     <td><?= ViewService::e((string) $article['date']) ?></td>
                     <td>
                         <div class="bo-actions">
-                            <a class="bo-btn-ghost" href="/admin/articles/edit/<?= (int) $article['id'] ?>">Editer</a>
+                            <a class="bo-btn-ghost" href="<?= htmlspecialchars(UrlHelper::adminArticlesEdit((int) $article['id']), ENT_QUOTES, 'UTF-8') ?>">Editer</a>
                             <form method="post" action="/admin/articles/delete/<?= (int) $article['id'] ?>" onsubmit="return confirm('Supprimer cet article ?')">
                                 <button class="bo-btn-danger" type="submit">Supprimer</button>
                             </form>
@@ -67,11 +67,11 @@ $fallbackImage = '/assets/images/wallpaperflare.com_wallpaper%20(9).jpg';
     <?php if ($totalPages > 1): ?>
         <div class="bo-actions">
             <?php if ($currentPage > 1): ?>
-                <a class="bo-btn-ghost" href="/admin/articles?page=<?= (int) ($currentPage - 1) ?>">&laquo; Precedent</a>
+                <a class="bo-btn-ghost" href="<?= htmlspecialchars(UrlHelper::adminArticles(), ENT_QUOTES, 'UTF-8') ?>?page=<?= (int) ($currentPage - 1) ?>">&laquo; Precedent</a>
             <?php endif; ?>
 
             <?php if ($currentPage < $totalPages): ?>
-                <a class="bo-btn-ghost" href="/admin/articles?page=<?= (int) ($currentPage + 1) ?>">Suivant &raquo;</a>
+                <a class="bo-btn-ghost" href="<?= htmlspecialchars(UrlHelper::adminArticles(), ENT_QUOTES, 'UTF-8') ?>?page=<?= (int) ($currentPage + 1) ?>">Suivant &raquo;</a>
             <?php endif; ?>
         </div>
     <?php endif; ?>

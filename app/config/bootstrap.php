@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/database.php';
+require_once __DIR__ . '/../helpers/UrlHelper.php';
 
 function app_set_status(int $statusCode): void
 {

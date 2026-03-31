@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 $activeNav = (string) ($activeNav ?? '');
 $navItems = [
-    ['key' => 'home', 'href' => '/home', 'label' => 'Accueil', 'hint' => ''],
-    ['key' => 'users', 'href' => '/users', 'label' => 'Utilisateurs', 'hint' => ''],
-    ['key' => 'account', 'href' => '/mon-compte', 'label' => 'Mon compte', 'hint' => ''],
-    ['key' => 'login', 'href' => '/login', 'label' => 'Connexion', 'hint' => ''],
-    ['key' => 'admin', 'href' => '/admin/login', 'label' => 'BackOffice', 'hint' => ''],
+    ['key' => 'home', 'href' => UrlHelper::home(), 'label' => 'Accueil', 'hint' => ''],
+    ['key' => 'users', 'href' => UrlHelper::users(), 'label' => 'Utilisateurs', 'hint' => ''],
+    ['key' => 'account', 'href' => UrlHelper::account(), 'label' => 'Mon compte', 'hint' => ''],
+    ['key' => 'login', 'href' => UrlHelper::login(), 'label' => 'Connexion', 'hint' => ''],
+    ['key' => 'admin', 'href' => UrlHelper::adminLogin(), 'label' => 'BackOffice', 'hint' => ''],
 ];
 ?>
 <aside class="fo-sidebar" aria-label="Navigation frontoffice">
