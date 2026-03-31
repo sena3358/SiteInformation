@@ -20,7 +20,7 @@ $frontofficeImages = [
     <h2 class="bo-section-title"><?= is_array($article) ? 'Modifier un article' : 'Nouvel article' ?></h2>
     <p class="bo-muted">Utilisez les champs SEO et choisissez une image issue du meme repertoire visuel que le frontoffice.</p>
 
-    <form class="bo-form-grid" method="post" action="<?= ViewService::e($action) ?>">
+    <form class="bo-form-grid" method="post" action="<?= ViewService::e($action) ?>" enctype="multipart/form-data">
         <div class="bo-field">
             <label for="titre">Titre</label>
             <input class="bo-input" id="titre" name="titre" maxlength="255" value="<?= ViewService::e($articleTitre) ?>" required>
@@ -55,8 +55,15 @@ $frontofficeImages = [
             </div>
 
             <div class="bo-field">
-                <label for="image">Image (URL ou chemin)</label>
-                <input class="bo-input" id="image" name="image" maxlength="255" value="<?= ViewService::e($articleImage) ?>" placeholder="/assets/images/618748.jpg">
+                <label for="image_file">Image (fichier)</label>
+                <?php if ($articleImage !== ''): ?>
+                    <p class="bo-muted">Image actuelle: <?= ViewService::e($articleImage) ?></p>
+                    <img class="image" src="<?= ViewService::e($articleImage) ?>" alt="Image actuelle" loading="lazy" style="max-width:180px; border-radius:6px; margin-bottom:8px;">
+                <?php endif; ?>
+                <input type="hidden" id="existing_image" name="existing_image" value="<?= ViewService::e($articleImage) ?>">
+                <input type="hidden" id="image_library" name="image_library" value="">
+                <input class="bo-input" type="file" id="image_file" name="image_file" accept="image/*">
+                <p id="image-selection-info" class="bo-muted"></p>
             </div>
         </div>
 
@@ -96,25 +103,35 @@ $frontofficeImages = [
 </section>
 
 <script>
-    // Initialize TinyMCE on content field
-    tinymce.init({
-        selector: '#contenu',
-        plugins: 'lists link image code table wordcount',
-        toolbar: 'undo redo | formatselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image | code',
-        menubar: 'file edit view insert format tools',
-        height: 400,
-        branding: false,
-        content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto; }',
-        link_default_target: '_blank',
-    });
+    // Initialize TinyMCE on content field when loaded
+    if (window.tinymce) {
+        tinymce.init({
+            license_key: 'gpl',
+            selector: '#contenu',
+            plugins: 'lists link image code table wordcount',
+            toolbar: 'undo redo | formatselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image | code',
+            menubar: 'file edit view insert format tools',
+            height: 400,
+            branding: false,
+            content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto; }',
+            link_default_target: '_blank',
+        });
+    }
 
     // Image library button functionality
     document.querySelectorAll('[data-image-path]').forEach(function (button) {
         button.addEventListener('click', function () {
-            var imageInput = document.getElementById('image');
-            if (imageInput) {
-                imageInput.value = button.getAttribute('data-image-path') || '';
-                imageInput.focus();
+            var libraryInput = document.getElementById('image_library');
+            var info = document.getElementById('image-selection-info');
+            var imagePath = button.getAttribute('data-image-path') || '';
+
+            if (libraryInput) {
+                libraryInput.value = imagePath;
+            }
+            if (info) {
+                info.textContent = imagePath !== ''
+                    ? 'Image de bibliotheque selectionnee: ' + imagePath
+                    : '';
             }
         });
     });

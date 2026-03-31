@@ -67,6 +67,8 @@ RewriteEngine On
 # Articles: article-123-mon-article.html -> /article/123-mon-article
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+# SEO-friendly URLs rewriting
+# Articles: article-123-mon-article.html -> /article/123-mon-article
 RewriteRule ^article-([0-9]+-[_a-z0-9\-]+)\.html$ /article/$1 [L,QSA]
 
 # Categories: categorie-slug.html -> /categorie/slug

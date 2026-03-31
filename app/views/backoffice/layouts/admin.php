@@ -36,8 +36,8 @@ $isLoginPage = str_contains(strtolower((string) $title), 'connexion');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= ViewService::e($title) ?></title>
     <link rel="stylesheet" href="/assets/css/backoffice.css">
-    <!-- TinyMCE from CDN -->
-    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <!-- TinyMCE local (offline) -->
+    <script src="/assets/js/tinymce/tinymce.min.js"></script>
 </head>
 <body class="<?= $isLoginPage ? 'bo-auth' : '' ?>">
     <div class="bo-shell">
