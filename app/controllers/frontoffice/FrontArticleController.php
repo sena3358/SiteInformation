@@ -32,6 +32,7 @@ final class FrontArticleController
         $previousArticle = Article::previousPublished($articleId, $articleDate);
         $nextArticle = Article::nextPublished($articleId, $articleDate);
 
+        $categoryHighlights = Category::allWithPublishedStats();
         require __DIR__ . '/../../views/frontoffice/article/show.php';
     }
 
@@ -68,6 +69,7 @@ final class FrontArticleController
         $offset = ($currentPage - 1) * $perPage;
 
         $articles = Article::publishedByCategory($categoryId, $perPage, $offset);
+        $categoryHighlights = Category::allWithPublishedStats();
         require __DIR__ . '/../../views/frontoffice/article/category.php';
     }
 }

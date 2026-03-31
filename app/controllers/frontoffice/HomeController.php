@@ -14,6 +14,7 @@ final class HomeController
         $siteName = Setting::getSiteName();
         $siteCountry = Setting::getCountry();
         $title = 'Actualites recentes | ' . $siteName;
+        $topViewedArticles = Article::topViewed(3);
         $articles = Article::recentPublished(10);
         $categoryHighlights = Category::allWithPublishedStats();
         $visitorLoggedIn = VisitorAuthService::isLoggedIn();

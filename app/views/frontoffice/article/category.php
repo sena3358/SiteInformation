@@ -10,7 +10,11 @@
 <body>
     <div class="fo-shell">
         <div class="fo-layout">
-            <?php $activeNav = 'home'; require __DIR__ . '/../partials/sidebar.php'; ?>
+            <?php 
+                $activeNav = 'home'; 
+                $categories = $categoryHighlights ?? [];
+                require __DIR__ . '/../partials/sidebar.php'; 
+            ?>
 
             <main class="fo-main">
                 <a class="fo-backlink" href="<?= htmlspecialchars(UrlHelper::home(), ENT_QUOTES, 'UTF-8') ?>">Retour accueil</a>

@@ -3,32 +3,80 @@
 declare(strict_types=1);
 
 $activeNav = (string) ($activeNav ?? '');
-$navItems = [
-    ['key' => 'home', 'href' => UrlHelper::home(), 'label' => 'Accueil', 'hint' => ''],
-    ['key' => 'users', 'href' => UrlHelper::users(), 'label' => 'Utilisateurs', 'hint' => ''],
-    ['key' => 'account', 'href' => UrlHelper::account(), 'label' => 'Mon compte', 'hint' => ''],
-    ['key' => 'login', 'href' => UrlHelper::login(), 'label' => 'Connexion', 'hint' => ''],
-    ['key' => 'admin', 'href' => UrlHelper::adminLogin(), 'label' => 'BackOffice', 'hint' => ''],
-];
 ?>
 <header class="fo-navbar" aria-label="Navigation frontoffice">
-    <div class="fo-navbar-inner">
-        <div class="fo-navbar-brand">
-            <h2 class="fo-sidebar-title">Iran - Infos</h2>
-        </div>
-
-        <nav class="fo-navbar-links" aria-label="Liens principaux">
-            <?php foreach ($navItems as $item): ?>
-                <?php $isActive = $activeNav === $item['key']; ?>
-                <a
-                    class="fo-navbar-link <?= $isActive ? 'is-active' : '' ?>"
-                    href="<?= htmlspecialchars($item['href'], ENT_QUOTES) ?>"
-                    <?= $isActive ? 'aria-current="page"' : '' ?>
-                >
-                    <span class="fo-navbar-link-label"><?= htmlspecialchars($item['label'], ENT_QUOTES) ?></span>
-                    <span class="fo-navbar-link-hint"><?= htmlspecialchars($item['hint'], ENT_QUOTES) ?></span>
+    <!-- Top Bar -->
+    <div class="fo-navbar-top">
+        <div class="fo-navbar-top-inner">
+            <!-- Left: Journal & Services -->
+            <div class="fo-navbar-top-left">
+                <a href="<?= htmlspecialchars(UrlHelper::home(), ENT_QUOTES) ?>" class="fo-navbar-toplink" title="Le journal">
+                    <span class="fo-navbar-toplink-icon">&#9783;</span>
+                    <span class="fo-navbar-toplink-label">Le journal</span>
                 </a>
-            <?php endforeach; ?>
-        </nav>
+                <a href="#services" class="fo-navbar-toplink" title="Services">
+                    <span class="fo-navbar-toplink-icon"></span>
+                    <span class="fo-navbar-toplink-label"></span>
+                </a>
+            </div>
+
+            <!-- Center: Logo/Brand -->
+            <div class="fo-navbar-top-center">
+                <h1 class="fo-navbar-logo">
+                    <a href="<?= htmlspecialchars(UrlHelper::home(), ENT_QUOTES) ?>">Iran - Infos</a>
+                </h1>
+            </div>
+
+            <!-- Right: Language, Subscribe, Search -->
+            <div class="fo-navbar-top-right">
+                <div class="fo-navbar-lang">
+                    <span class="fo-lang-current"></span>
+                    <a href="#" class="fo-lang-link"></a>
+                </div>
+                
+                <?php if (($visitorLoggedIn ?? false) === true): ?>
+                    <span class="fo-navbar-user-badge"><?= htmlspecialchars((string) ($visitorName ?? ''), ENT_QUOTES) ?></span>
+                    <a href="<?= htmlspecialchars(UrlHelper::account(), ENT_QUOTES) ?>" class="fo-navbar-toplink">Mon compte</a>
+                    <a href="<?= htmlspecialchars(UrlHelper::logout(), ENT_QUOTES) ?>" class="fo-navbar-toplink">Déconnexion</a>
+                <?php else: ?>
+                    <a href="<?= htmlspecialchars(UrlHelper::adminLogin(), ENT_QUOTES) ?>" class="fo-navbar-subscribe">Backoffice</a>
+                <?php endif; ?>
+                
+                <a href="#search" class="fo-navbar-search-icon" title="Rechercher"></a>
+            </div>
+        </div>
     </div>
+
+    <!-- Main Navigation Bar -->
+    <nav class="fo-navbar-main" aria-label="Navigation principale">
+        <div class="fo-navbar-main-inner">
+            <!-- Menu Toggle -->
+            <button class="fo-navbar-menu-toggle" aria-label="Ouvrir le menu" title="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <!-- Sections Categories -->
+            <div class="fo-navbar-sections">
+                <?php if (!empty($categories)): ?>
+                    <?php foreach ($categories as $category): ?>
+                        <a
+                            class="fo-navbar-section <?= $activeNav === $category['id'] ? 'is-active' : '' ?>"
+                            href="<?= htmlspecialchars(Category::url($category), ENT_QUOTES) ?>"
+                            <?= $activeNav === $category['id'] ? 'aria-current="page"' : '' ?>
+                        >
+                            <?= htmlspecialchars((string) $category['libelle'], ENT_QUOTES) ?>
+                        </a>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                <!-- <a class="fo-navbar-section" href="<?= htmlspecialchars(UrlHelper::adminLogin(), ENT_QUOTES) ?>">BackOffice</a> -->
+            </div>
+
+            <!-- Extras -->
+            <div class="fo-navbar-main-extras">
+                <a href="#search" class="fo-navbar-search-toggle" title="Rechercher"></a>
+            </div>
+        </div>
+    </nav>
 </header>

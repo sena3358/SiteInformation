@@ -27,7 +27,7 @@ $categoryImages = [
             <table class="bo-table">
                 <thead>
                     <tr>
-                        <th>Apercu</th>
+                        <!-- <th>Apercu</th> -->
                         <th>ID</th>
                         <th>Libelle</th>
                         <th>Actions</th>
@@ -37,9 +37,9 @@ $categoryImages = [
                 <?php foreach ($categories as $category): ?>
                     <?php $previewImage = $categoryImages[((int) $category['id']) % count($categoryImages)]; ?>
                     <tr>
-                        <td>
+                        <!-- <td>
                             <img class="bo-thumb" src="<?= ViewService::e($previewImage) ?>" alt="Apercu categorie <?= (int) $category['id'] ?>" loading="lazy">
-                        </td>
+                        </td> -->
                         <td><?= (int) $category['id'] ?></td>
                         <td>
                             <form class="bo-actions" method="post" action="<?= htmlspecialchars(UrlHelper::adminCategoriesUpdate((int) $category['id']), ENT_QUOTES, 'UTF-8') ?>">

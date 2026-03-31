@@ -10,7 +10,7 @@ require_once __DIR__ . '/../../controllers/backoffice/AdminArticleController.php
 require_once __DIR__ . '/../../services/common/ResponseService.php';
 
 app_add_route($routes, 'GET', '/', static function (): void {
-    ResponseService::redirect('/admin');
+    ResponseService::redirect('/home');
 });
 
 app_add_route($routes, 'GET', '/health', [HealthController::class, 'check']);

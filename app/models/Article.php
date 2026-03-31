@@ -78,6 +78,26 @@ final class Article
         return $rows;
     }
 
+    /** @return list<array<string,mixed>> */
+    public static function topViewed(int $limit = 3): array
+    {
+        $sql = 'SELECT a.id, a.id_categorie, a.titre, a.contenu, a.image, a.date, a.nom_auteur, a.statut, a.vue_count, a.meta_title, a.meta_description, c.libelle AS categorie
+                FROM articles a
+                LEFT JOIN categories c ON c.id = a.id_categorie
+                WHERE a.statut = :statut
+                ORDER BY a.vue_count DESC, a.date DESC, a.id DESC
+                LIMIT :limite';
+
+        $stmt = db()->prepare($sql);
+        $stmt->bindValue(':statut', 'publie');
+        $stmt->bindValue(':limite', max(1, $limit), PDO::PARAM_INT);
+        $stmt->execute();
+
+        /** @var list<array<string,mixed>> $rows */
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $rows;
+    }
+
     /** @return array<string,mixed>|null */
     public static function findPublishedById(int $id): ?array
     {

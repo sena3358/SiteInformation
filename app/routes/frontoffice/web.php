@@ -12,6 +12,7 @@ require_once __DIR__ . '/../../controllers/SitemapController.php';
 app_add_route($routes, 'GET', '/sitemap.xml', [SitemapController::class, 'xml']);
 
 // Frontend
+app_add_route($routes, 'GET', '/', [HomeController::class, 'index']);
 app_add_route($routes, 'GET', '/home', [HomeController::class, 'index']);
 app_add_route($routes, 'GET', '/categorie/@slug', [FrontArticleController::class, 'byCategory']);
 app_add_route($routes, 'GET', '/article/@slugParam', [FrontArticleController::class, 'show']);
