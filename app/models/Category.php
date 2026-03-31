@@ -10,9 +10,7 @@ final class Category
     /** @param array<string,mixed> $category */
     public static function url(array $category): string
     {
-        $label = (string) ($category['libelle'] ?? '');
-        $slug = slugify($label);
-        return '/categorie-' . $slug . '.html';
+        return UrlHelper::category($category);
     }
 
     /** @return list<array{id:int,libelle:string}> */

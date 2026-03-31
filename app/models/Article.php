@@ -3,9 +3,24 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../config/bootstrap.php';
 
 final class Article
 {
+    /** @param array<string,mixed> $article */
+    public static function url(array $article): string
+    {
+        $id = (int) ($article['id'] ?? 0);
+        $title = (string) ($article['titre'] ?? 'article');
+        $slug = slugify($title);
+
+        if ($id <= 0) {
+            return UrlHelper::home();
+        }
+
+        return '/article-' . $id . '-' . $slug . '.html';
+    }
+
     public static function countAll(): int
     {
         return (int) db()->query('SELECT COUNT(*) FROM articles')->fetchColumn();

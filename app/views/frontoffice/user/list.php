@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Utilisateurs</title>
+    <meta name="description" content="Liste des utilisateurs de reference pour consultation frontoffice.">
     <link rel="stylesheet" href="/assets/css/frontoffice.css">
 </head>
 <body>

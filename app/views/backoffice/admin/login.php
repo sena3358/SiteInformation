@@ -8,7 +8,7 @@
     </aside>
 
     <div class="bo-login-form-wrap">
-        <form class="bo-login-form bo-form-grid" method="post" action="/admin/login">
+        <form class="bo-login-form bo-form-grid" method="post" action="<?= htmlspecialchars(UrlHelper::adminLogin(), ENT_QUOTES, 'UTF-8') ?>">
             <p class="bo-login-kicker">BackOffice</p>
             <h2 class="bo-login-title">Connexion administrateur</h2>
             <p class="bo-login-help">Utilisez vos identifiants pour acceder a l'espace de gestion.</p>

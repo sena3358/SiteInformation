@@ -26,8 +26,8 @@
     </div>
 
     <div class="bo-actions">
-        <a class="bo-btn" href="/admin/articles/create">Creer un article</a>
-        <a class="bo-btn-ghost" href="/admin/categories">Gerer les categories</a>
-        <a class="bo-btn-ghost" href="/admin/articles">Voir les articles</a>
+        <a class="bo-btn" href="<?= htmlspecialchars(UrlHelper::adminArticlesCreate(), ENT_QUOTES, 'UTF-8') ?>">Creer un article</a>
+        <a class="bo-btn-ghost" href="<?= htmlspecialchars(UrlHelper::adminCategories(), ENT_QUOTES, 'UTF-8') ?>">Gerer les categories</a>
+        <a class="bo-btn-ghost" href="<?= htmlspecialchars(UrlHelper::adminArticles(), ENT_QUOTES, 'UTF-8') ?>">Voir les articles</a>
     </div>
 </section>
