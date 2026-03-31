@@ -1,10 +1,6 @@
 Options +FollowSymlinks
 RewriteEngine On
 
-# If file or directory exists, serve it directly.
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-
 # SEO-friendly URLs rewriting
 # Articles: article-123-mon-article.html -> /article/123-mon-article
 RewriteRule ^article-([0-9]+-[_a-z0-9\-]+)\.html$ /article/$1 [L,QSA]
@@ -13,4 +9,6 @@ RewriteRule ^article-([0-9]+-[_a-z0-9\-]+)\.html$ /article/$1 [L,QSA]
 RewriteRule ^categorie-([_a-z0-9\-]+)\.html$ /categorie/$1 [L,QSA]
 
 # Otherwise route all requests to index.php.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.php [QSA,L]
