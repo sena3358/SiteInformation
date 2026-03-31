@@ -17,7 +17,7 @@
             ?>
 
             <main class="fo-main">
-        <header>
+        <!-- <header>
             <div class="fo-topline">
                 <span class="fo-pill">Edition speciale: couverture terrain</span>
                 <?php if (($visitorLoggedIn ?? false) === true): ?>
@@ -37,7 +37,7 @@
                 </div>
             </div>
 
-        </header>
+        </header> -->
 
         <!-- À la une section -->
         <?php if (!empty($topViewedArticles)): ?>
@@ -81,29 +81,6 @@
         <?php endif; ?>
 
         <div class="fo-grid">
-            <aside class="fo-card">
-                <h2>Categories a suivre</h2>
-                <ul class="fo-category-briefs">
-                    <?php foreach (($categoryHighlights ?? []) as $category): ?>
-                        <li>
-                            <article class="fo-category-brief">
-                                <h3>
-                                    <a href="<?= htmlspecialchars(Category::url($category), ENT_QUOTES, 'UTF-8') ?>">
-                                        <?= htmlspecialchars((string) $category['libelle'], ENT_QUOTES, 'UTF-8') ?>
-                                    </a>
-                                </h3>
-                                <p>
-                                    <?= (int) ($category['published_count'] ?? 0) ?> article(s) publie(s)
-                                    <?php if (!empty($category['last_published_at'])): ?>
-                                        - derniere publication: <?= htmlspecialchars((string) $category['last_published_at'], ENT_QUOTES, 'UTF-8') ?>
-                                    <?php endif; ?>
-                                </p>
-                            </article>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </aside>
-
             <section class="fo-card">
                 <h2 class="fo-list-title">Articles recents</h2>
                 <div class="fo-article-grid">

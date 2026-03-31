@@ -113,7 +113,7 @@ VALUES
         'Les images satellitaires montrent des traces d''impact apres un incident.'
     ),
     (
-        (SELECT id FROM categories WHERE libelle = 'International' LIMIT 1),
+        (SELECT id FROM categories WHERE libelle = 'Technologie' LIMIT 1),
         'Portrait officiel: un dirigeant au coeur de la scene regionale',
         'Un portrait officiel rappelle la place centrale d''un dirigeant dans l''actualite regionale. Les observateurs notent l''importance du symbolisme dans la communication politique, tandis que des annonces sont attendues sur le plan diplomatique. La scene internationale suit de pres les developpements en cours.',
         '/assets/images/image10.webp',
@@ -125,7 +125,7 @@ VALUES
         'Le symbolisme reste un levier majeur dans la communication politique regionale.'
     ),
     (
-        (SELECT id FROM categories WHERE libelle = 'International' LIMIT 1),
+        (SELECT id FROM categories WHERE libelle = 'Technologie' LIMIT 1),
         'Apparition televisee: message d''un responsable sur la situation',
         'Dans une allocution televisee, un responsable a presente sa lecture de la situation et appele a la vigilance. Les observateurs s''attendent a des mesures concretes sur le plan diplomatique et securitaire. Sur les reseaux sociaux, la prise de parole suscite des reactions contrastees.',
         '/assets/images/image11.webp',
