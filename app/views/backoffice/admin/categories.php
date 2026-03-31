@@ -10,7 +10,7 @@ $categoryImages = [
     <article class="bo-card">
         <h2 class="bo-section-title">Nouvelle categorie</h2>
         <p class="bo-muted">Creez des categories claires pour structurer les publications.</p>
-        <form class="bo-form-grid" method="post" action="/admin/categories/create">
+        <form class="bo-form-grid" method="post" action="<?= htmlspecialchars(UrlHelper::adminCategoriesCreate(), ENT_QUOTES, 'UTF-8') ?>">
             <div class="bo-field">
                 <label for="libelle">Libelle</label>
                 <input class="bo-input" id="libelle" name="libelle" maxlength="120" required>
@@ -42,13 +42,13 @@ $categoryImages = [
                         </td>
                         <td><?= (int) $category['id'] ?></td>
                         <td>
-                            <form class="bo-actions" method="post" action="/admin/categories/update/<?= (int) $category['id'] ?>">
+                            <form class="bo-actions" method="post" action="<?= htmlspecialchars(UrlHelper::adminCategoriesUpdate((int) $category['id']), ENT_QUOTES, 'UTF-8') ?>">
                                 <input class="bo-input" style="min-width:220px;" name="libelle" value="<?= ViewService::e((string) $category['libelle']) ?>" required>
                                 <button class="bo-btn-ghost" type="submit">Modifier</button>
                             </form>
                         </td>
                         <td>
-                            <form method="post" action="/admin/categories/delete/<?= (int) $category['id'] ?>" onsubmit="return confirm('Supprimer cette categorie ?')">
+                            <form method="post" action="<?= htmlspecialchars(UrlHelper::adminCategoriesDelete((int) $category['id']), ENT_QUOTES, 'UTF-8') ?>" onsubmit="return confirm('Supprimer cette categorie ?')">
                                 <button class="bo-btn-danger" type="submit">Supprimer</button>
                             </form>
                         </td>

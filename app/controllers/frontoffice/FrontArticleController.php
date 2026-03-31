@@ -7,13 +7,19 @@ require_once __DIR__ . '/../../models/Category.php';
 
 final class FrontArticleController
 {
-    public static function show(string $id): void
+    public static function show(string $slugParam): void
     {
-        if (!ctype_digit($id)) {
+        $articleId = 0;
+        if (ctype_digit($slugParam)) {
+            $articleId = (int) $slugParam;
+        } elseif (preg_match('/^(\d+)-/', $slugParam, $matches) === 1) {
+            $articleId = (int) $matches[1];
+        }
+
+        if ($articleId <= 0) {
             app_halt(404, 'Article introuvable.');
         }
 
-        $articleId = (int) $id;
         $article = Article::findPublishedById($articleId);
         if ($article === null) {
             app_halt(404, 'Article introuvable.');
@@ -29,17 +35,20 @@ final class FrontArticleController
         require __DIR__ . '/../../views/frontoffice/article/show.php';
     }
 
-    public static function byCategory(string $id): void
+    public static function byCategory(string $slugParam): void
     {
-        if (!ctype_digit($id)) {
-            app_halt(404, 'Categorie introuvable.');
+        $category = null;
+        if (ctype_digit($slugParam)) {
+            $category = Category::findById((int) $slugParam);
+        } else {
+            $category = Category::findBySlug($slugParam);
         }
 
-        $categoryId = (int) $id;
-        $category = Category::findById($categoryId);
         if ($category === null) {
             app_halt(404, 'Categorie introuvable.');
         }
+
+        $categoryId = (int) $category['id'];
 
         $page = filter_input(
             INPUT_GET,

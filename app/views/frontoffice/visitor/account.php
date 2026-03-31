@@ -17,8 +17,8 @@
             <h1>Mon compte</h1>
             <p>Bienvenue, <strong><?= htmlspecialchars($username, ENT_QUOTES, 'UTF-8') ?></strong>.</p>
             <ul>
-                <li><a href="/home">Accueil</a></li>
-                <li><a href="/logout">Se deconnecter</a></li>
+                <li><a href="<?= htmlspecialchars(UrlHelper::home(), ENT_QUOTES, 'UTF-8') ?>">Accueil</a></li>
+                <li><a href="<?= htmlspecialchars(UrlHelper::logout(), ENT_QUOTES, 'UTF-8') ?>">Se deconnecter</a></li>
             </ul>
         </section>
             </main>

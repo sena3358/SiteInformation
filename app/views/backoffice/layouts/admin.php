@@ -16,10 +16,10 @@ if (AuthService::isLoggedIn()) {
     $isCategories = str_contains($titleLc, 'categorie');
 
     $menu = '<nav class="bo-menu" aria-label="Navigation backoffice">'
-        . '<a class="' . ($isDashboard ? 'is-active' : '') . '" href="/admin">Dashboard</a>'
-        . '<a class="' . ($isArticles ? 'is-active' : '') . '" href="/admin/articles">Articles</a>'
-        . '<a class="' . ($isCategories ? 'is-active' : '') . '" href="/admin/categories">Categories</a>'
-        . '<a href="/admin/logout">Deconnexion</a>'
+        . '<a class="' . ($isDashboard ? 'is-active' : '') . '" href="' . ViewService::e(UrlHelper::admin()) . '">Dashboard</a>'
+        . '<a class="' . ($isArticles ? 'is-active' : '') . '" href="' . ViewService::e(UrlHelper::adminArticles()) . '">Articles</a>'
+        . '<a class="' . ($isCategories ? 'is-active' : '') . '" href="' . ViewService::e(UrlHelper::adminCategories()) . '">Categories</a>'
+        . '<a href="' . ViewService::e(UrlHelper::adminLogout()) . '">Deconnexion</a>'
         . '</nav>';
 }
 

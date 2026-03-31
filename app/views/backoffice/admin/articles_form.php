@@ -97,7 +97,7 @@ $frontofficeImages = [
 
         <div class="bo-actions">
             <button class="bo-btn" type="submit"><?= is_array($article) ? 'Enregistrer' : 'Creer l\'article' ?></button>
-            <a class="bo-btn-ghost" href="/admin/articles">Retour a la liste</a>
+            <a class="bo-btn-ghost" href="<?= htmlspecialchars(UrlHelper::adminArticles(), ENT_QUOTES, 'UTF-8') ?>">Retour a la liste</a>
         </div>
     </form>
 </section>

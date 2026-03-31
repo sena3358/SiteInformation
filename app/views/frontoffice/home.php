@@ -34,10 +34,10 @@
             </div>
 
             <nav class="fo-nav" aria-label="Navigation principale">
-                <a href="/login">Connexion visiteur</a>
-                <a href="/mon-compte">Mon compte</a>
-                <a href="/logout">Deconnexion</a>
-                <a href="/admin/login">BackOffice</a>
+                <a href="<?= htmlspecialchars(UrlHelper::login(), ENT_QUOTES, 'UTF-8') ?>">Connexion visiteur</a>
+                <a href="<?= htmlspecialchars(UrlHelper::account(), ENT_QUOTES, 'UTF-8') ?>">Mon compte</a>
+                <a href="<?= htmlspecialchars(UrlHelper::logout(), ENT_QUOTES, 'UTF-8') ?>">Deconnexion</a>
+                <a href="<?= htmlspecialchars(UrlHelper::adminLogin(), ENT_QUOTES, 'UTF-8') ?>">BackOffice</a>
             </nav>
         </header>
 

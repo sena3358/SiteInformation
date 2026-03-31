@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulaire utilisateur</title>
+    <meta name="description" content="Formulaire utilisateur pour demonstration de saisie frontoffice.">
     <link rel="stylesheet" href="/assets/css/frontoffice.css">
 </head>
 <body>
