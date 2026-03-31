@@ -350,7 +350,7 @@ body {
     position: relative;
     background:
         linear-gradient(30deg, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.44)),
-        url('/assets/images/618748.jpg') center / cover no-repeat;
+        url('/assets/images/accueil.jpg') center / cover no-repeat;
     padding: 1.2rem;
     color: #ffffff;
     display: flex;
