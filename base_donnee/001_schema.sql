@@ -55,3 +55,15 @@ VALUES
     ('site_country', 'Iran'),
     ('site_name', 'Actualites Iran')
 ON CONFLICT (cle) DO NOTHING;
+
+UPDATE articles
+SET slug = LOWER(
+    REGEXP_REPLACE(
+        REGEXP_REPLACE(
+            TRANSLATE(titre, 'àâäéèêëïîôùûüç', 'aaaeeeeiioouuc'),
+            '[^a-zA-Z0-9]+', '-', 'g'
+        ),
+        '^-|-$', '', 'g'
+    )
+)
+WHERE slug IS NULL OR slug = '';
