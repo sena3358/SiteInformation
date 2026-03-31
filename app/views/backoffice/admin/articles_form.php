@@ -96,6 +96,19 @@ $frontofficeImages = [
 </section>
 
 <script>
+    // Initialize TinyMCE on content field
+    tinymce.init({
+        selector: '#contenu',
+        plugins: 'lists link image code table wordcount',
+        toolbar: 'undo redo | formatselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image | code',
+        menubar: 'file edit view insert format tools',
+        height: 400,
+        branding: false,
+        content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto; }',
+        link_default_target: '_blank',
+    });
+
+    // Image library button functionality
     document.querySelectorAll('[data-image-path]').forEach(function (button) {
         button.addEventListener('click', function () {
             var imageInput = document.getElementById('image');

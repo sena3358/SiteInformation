@@ -12,7 +12,7 @@ final class Category
     {
         $label = (string) ($category['libelle'] ?? '');
         $slug = slugify($label);
-        return '/categorie/' . $slug;
+        return '/categorie-' . $slug . '.html';
     }
 
     /** @return list<array{id:int,libelle:string}> */

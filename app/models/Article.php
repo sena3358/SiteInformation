@@ -12,7 +12,7 @@ final class Article
     {
         $id = (int) ($article['id'] ?? 0);
         $slug = !empty($article['slug']) ? $article['slug'] : slugify((string) ($article['titre'] ?? ''));
-        return '/article/' . $id . '-' . $slug;
+        return '/article-' . $id . '-' . $slug . '.html';
     }
 
     public static function countAll(): int

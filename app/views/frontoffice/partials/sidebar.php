@@ -14,7 +14,7 @@ $navItems = [
 <aside class="fo-sidebar" aria-label="Navigation frontoffice">
     <div class="fo-sidebar-card">
         <div class="fo-sidebar-brand">
-            <h2 class="fo-sidebar-title">TP - SiteInformation</h2>
+            <h2 class="fo-sidebar-title">Iran - Infos</h2>
             
         </div>
 
