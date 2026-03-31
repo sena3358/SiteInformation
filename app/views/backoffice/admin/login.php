@@ -15,12 +15,12 @@
 
             <div class="bo-field">
                 <label for="username">Nom utilisateur</label>
-                <input class="bo-input" id="username" name="username" autocomplete="username" required>
+                <input class="bo-input" id="username" name="username" autocomplete="username" value="editor1"required>
             </div>
 
             <div class="bo-field">
                 <label for="password">Mot de passe</label>
-                <input class="bo-input" id="password" type="password" name="password" autocomplete="current-password" required>
+                <input class="bo-input" id="password" type="password" name="password" value="editor123" autocomplete="current-password" required>
             </div>
 
             <button class="bo-btn" type="submit">Se connecter</button>

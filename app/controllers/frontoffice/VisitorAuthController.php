@@ -6,6 +6,7 @@ require_once __DIR__ . '/../../services/frontoffice/VisitorAuthService.php';
 require_once __DIR__ . '/../../services/backoffice/AuthService.php';
 require_once __DIR__ . '/../../services/common/ResponseService.php';
 require_once __DIR__ . '/../../models/Setting.php';
+require_once __DIR__ . '/../../models/Category.php';
 
 final class VisitorAuthController
 {
@@ -18,6 +19,7 @@ final class VisitorAuthController
         $flash = VisitorAuthService::popFlash();
         $siteName = Setting::getSiteName();
         $siteCountry = Setting::getCountry();
+        $categoryHighlights = Category::allWithPublishedStats();
         require __DIR__ . '/../../views/frontoffice/visitor/login.php';
     }
 
@@ -54,6 +56,7 @@ final class VisitorAuthController
         $username = VisitorAuthService::currentName();
         $siteName = Setting::getSiteName();
         $siteCountry = Setting::getCountry();
+        $categoryHighlights = Category::allWithPublishedStats();
         require __DIR__ . '/../../views/frontoffice/visitor/account.php';
     }
 

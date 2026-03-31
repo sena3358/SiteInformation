@@ -72,3 +72,5 @@
                 <a class="bo-btn-ghost" href="<?= htmlspecialchars(UrlHelper::adminArticles(), ENT_QUOTES, 'UTF-8') ?>?page=<?= (int) ($currentPage + 1) ?>">Suivant &raquo;</a>
             <?php endif; ?>
         </div>
+    <?php endif; ?>
+</section>

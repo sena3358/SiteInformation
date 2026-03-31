@@ -10,7 +10,11 @@
 <body>
     <div class="fo-shell">
         <div class="fo-layout">
-            <?php $activeNav = 'account'; require __DIR__ . '/../partials/sidebar.php'; ?>
+            <?php 
+                $activeNav = 'account'; 
+                $categories = $categoryHighlights ?? [];
+                require __DIR__ . '/../partials/sidebar.php'; 
+            ?>
 
             <main class="fo-main">
         <section class="fo-panel">

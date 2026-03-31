@@ -10,7 +10,11 @@
 <body>
     <div class="fo-shell">
         <div class="fo-layout">
-            <?php $activeNav = 'home'; require __DIR__ . '/partials/sidebar.php'; ?>
+            <?php 
+                $activeNav = 'home'; 
+                $categories = $categoryHighlights ?? [];
+                require __DIR__ . '/partials/sidebar.php'; 
+            ?>
 
             <main class="fo-main">
         <header>
@@ -22,7 +26,7 @@
             </div>
 
             <div class="fo-hero">
-                <div class="fo-hero-media" style="background-image:url('/assets/images/618748.jpg');"></div>
+                <div class="fo-hero-media" style="background-image:url('/assets/images/image1.jpg');"></div>
                 <div class="fo-hero-text">
                     <h1>Actualites - <?= htmlspecialchars($siteCountry ?? 'Iran', ENT_QUOTES, 'UTF-8') ?></h1>
                     <?php if (($visitorLoggedIn ?? false) === true): ?>
@@ -33,13 +37,48 @@
                 </div>
             </div>
 
-            <nav class="fo-nav" aria-label="Navigation principale">
-                <a href="<?= htmlspecialchars(UrlHelper::login(), ENT_QUOTES, 'UTF-8') ?>">Connexion visiteur</a>
-                <a href="<?= htmlspecialchars(UrlHelper::account(), ENT_QUOTES, 'UTF-8') ?>">Mon compte</a>
-                <a href="<?= htmlspecialchars(UrlHelper::logout(), ENT_QUOTES, 'UTF-8') ?>">Deconnexion</a>
-                <a href="<?= htmlspecialchars(UrlHelper::adminLogin(), ENT_QUOTES, 'UTF-8') ?>">BackOffice</a>
-            </nav>
         </header>
+
+        <!-- À la une section -->
+        <?php if (!empty($topViewedArticles)): ?>
+            <section class="fo-featured">
+                <div class="fo-featured-header">
+                    <h2>À la une</h2>
+                </div>
+                <div class="fo-featured-grid">
+                    <?php foreach ($topViewedArticles as $index => $article): ?>
+                        <article class="fo-featured-card <?= $index === 0 ? 'fo-featured-main' : '' ?>">
+                            <div class="fo-featured-image-wrapper">
+                                <img
+                                    class="fo-featured-image"
+                                    src="<?= htmlspecialchars(!empty($article['image']) ? (string) $article['image'] : '/assets/images/wallpaperflare.com_wallpaper%20(9).jpg', ENT_QUOTES, 'UTF-8') ?>"
+                                    alt="Illustration de l'article <?= htmlspecialchars((string) $article['titre'], ENT_QUOTES, 'UTF-8') ?>"
+                                    loading="lazy"
+                                >
+                                <div class="fo-featured-overlay"></div>
+                            </div>
+                            <div class="fo-featured-content">
+                                <?php if (!empty($article['categorie'])): ?>
+                                    <a class="fo-featured-category" href="<?= htmlspecialchars(Category::url(['id' => (int) ($article['id_categorie'] ?? 0), 'libelle' => (string) $article['categorie']]), ENT_QUOTES, 'UTF-8') ?>">
+                                        <?= htmlspecialchars((string) $article['categorie'], ENT_QUOTES, 'UTF-8') ?>
+                                    </a>
+                                <?php endif; ?>
+                                <h3>
+                                    <a href="<?= htmlspecialchars(Article::url($article), ENT_QUOTES, 'UTF-8') ?>">
+                                        <?= htmlspecialchars((string) $article['titre'], ENT_QUOTES, 'UTF-8') ?>
+                                    </a>
+                                </h3>
+                                <p class="fo-featured-meta">
+                                    <?= htmlspecialchars((string) ($article['date'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
+                                    - <?= htmlspecialchars((string) ($article['nom_auteur'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
+                                </p>
+                                <p class="fo-featured-summary"><?= nl2br(htmlspecialchars(mb_substr((string) ($article['contenu'] ?? ''), 0, 150), ENT_QUOTES, 'UTF-8')) ?>...</p>
+                            </div>
+                        </article>
+                    <?php endforeach; ?>
+                </div>
+            </section>
+        <?php endif; ?>
 
         <div class="fo-grid">
             <aside class="fo-card">

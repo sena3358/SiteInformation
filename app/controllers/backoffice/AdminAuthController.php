@@ -41,7 +41,7 @@ final class AdminAuthController
     {
         AuthService::logout();
         AuthService::setFlash('success', 'Vous etes deconnecte.');
-        ResponseService::redirect('/admin/login');
+        ResponseService::redirect('/home');
     }
 
     private static function postValue(string $key): string
